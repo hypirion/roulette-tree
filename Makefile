@@ -2,7 +2,7 @@ CC=$(shell which gcc)
 INCLUDEPATH= -Iinclude
 CFLAGS+= -std=c99 -Wall $(COPT) ${INCLUDEPATH}
 
-obj/%.o: src/%.o include/%.h
+obj/%.o: src/%.o include/%.h obj
 	mv src/$*.o obj/
 
 clean:
