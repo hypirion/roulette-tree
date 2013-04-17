@@ -45,3 +45,29 @@ void *linked_rget(linked_t *root) {
     }
   }
 }
+
+void *linked_rpop(linked_t *root) {
+  double pick = drand48() * root->tot_fitness;
+  double accum = 0;
+  linked_ll *prev = NULL;
+  linked_ll *cur = root->lptr;
+  while (1) {
+    accum += cur->fitness;
+    if (accum < pick) {
+      cur = cur->cdr;
+    }
+    else {
+      if (prev == NULL) { // Picked first element.
+        root->lptr = cur->cdr;
+      }
+      else { // Kick current away from previous
+        prev->cdr = cur->cdr;
+      }
+      root->length--;
+      root->tot_fitness -= cur->fitness;
+      void *elt_ptr = cur->car;
+      free(cur);
+      return elt_ptr;
+    }
+  }
+}
