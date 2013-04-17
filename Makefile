@@ -1,6 +1,6 @@
 CC=$(shell which gcc)
 INCLUDEPATH= -Iinclude
-CFLAGS+= -std=c99 -Wall $(COPT) ${INCLUDEPATH}
+CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH}
 
 obj/%.o: src/%.o include/%.h obj
 	mv src/$*.o obj/
