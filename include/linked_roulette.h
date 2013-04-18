@@ -22,5 +22,5 @@ void linked_add(linked_t *root, void *elt_ptr, double fitness);
 void *linked_rget(linked_t *root);
 void *linked_rpop(linked_t *root);
 
-void *linked_length(linked_t *root);
+uint32_t linked_length(linked_t *root);
 #endif
