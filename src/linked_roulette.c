@@ -77,3 +77,7 @@ void *linked_rpop(linked_t *root) {
 uint32_t linked_length(linked_t *root) {
   return root->length;
 }
+
+double linked_total_fitness(linked_t *root) {
+  return root->tot_fitness;
+}

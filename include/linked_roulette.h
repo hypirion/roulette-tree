@@ -23,4 +23,5 @@ void *linked_rget(linked_t *root);
 void *linked_rpop(linked_t *root);
 
 uint32_t linked_length(linked_t *root);
+double linked_total_fitness(linked_t *root);
 #endif
