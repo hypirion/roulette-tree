@@ -54,7 +54,9 @@ void *linked_rpop(linked_t *root) {
   while (1) {
     accum += cur->fitness;
     if (accum < pick) {
-      cur = cur->cdr;
+      linked_ll *next = cur->cdr;
+      prev = cur;
+      cur = next;
     }
     else {
       if (prev == NULL) { // Picked first element.
