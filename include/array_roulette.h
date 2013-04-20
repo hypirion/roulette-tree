@@ -2,6 +2,8 @@
 #define ARRAY_ROULETTE_H
 #include <stdint.h>
 
+#define AROULETTE_DEFAULT_CAP 32
+
 typedef struct {
   void *elt_ptr;
   double fit_from, fit_to;
@@ -10,6 +12,7 @@ typedef struct {
 typedef struct {
   aroulette_elt *arr;
   uint32_t len, cap;
+  double tot_fitness;
 } aroulette_t;
 
 aroulette_t *aroulette_create();
