@@ -1,4 +1,5 @@
 /* Arraylist-implementation of roulette wheel */
+#include <string.h>
 #include <stdlib.h>
 #include "array_roulette.h"
 
@@ -55,4 +56,21 @@ void *aroulette_rget(aroulette_t *ar) {
   double pick = drand48() * ar->tot_fitness;
   int index = aroulette_bsearch(ar, pick);
   return ar->arr[index].elt_ptr;
+}
+
+void *aroulette_rpop(aroulette_t *ar) {
+  double pick = drand48() * ar->tot_fitness;
+  int index = aroulette_bsearch(ar, pick);
+  aroulette_elt elt = ar->arr[index];
+  double rm_fitness = elt.fit_to - elt.fit_from;
+  void *ret = elt.elt_ptr;
+  memmove(&(ar->arr[index]), &(ar->arr[index+1]),
+          sizeof(aroulette_elt) * (ar->len - index - 1));
+  for (int i = index; i < ar->len; i++) {
+    ar->arr[i].fit_to -= rm_fitness;
+    ar->arr[i].fit_from -= rm_fitness;
+  }
+  ar->len--;
+  ar->tot_fitness -= rm_fitness;
+  return ret;
 }
