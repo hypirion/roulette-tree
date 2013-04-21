@@ -74,3 +74,11 @@ void *aroulette_rpop(aroulette_t *ar) {
   ar->tot_fitness -= rm_fitness;
   return ret;
 }
+
+uint32_t aroulette_length(aroulette_t *ar) {
+  return ar->tot_fitness;
+}
+
+double aroulette_total_fitness(aroulette_t *ar) {
+  return ar->tot_fitness;
+}

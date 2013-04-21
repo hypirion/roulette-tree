@@ -24,4 +24,5 @@ void *aroulette_rget(aroulette_t *ar);
 void *aroulette_rpop(aroulette_t *ar);
 
 uint32_t aroulette_length(aroulette_t *ar);
+double aroulette_total_fitness(aroulette_t *ar);
 #endif
