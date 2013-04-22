@@ -23,7 +23,7 @@ void rtree_destroy(rtree_t *rt) {
   free(rt);
 }
 
-void rtree_rget(rtree_t *rt) {
+void *rtree_rget(rtree_t *rt) {
   rtree_node_t *cur = rt->root;
   double pick = drand48() * cur->tot;
   while (1) {
