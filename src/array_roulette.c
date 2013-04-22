@@ -35,7 +35,7 @@ void aroulette_add(aroulette_t *ar, void *elt_ptr, double fitness) {
 }
 
 
-int aroulette_bsearch(aroulette_t *a, double pick) {
+static int aroulette_bsearch(aroulette_t *a, double pick) {
   int low = 0, high = a->len - 1;
   while (low <= high) {
     int mid = low + (high - low) / 2;
