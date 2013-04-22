@@ -1,11 +1,18 @@
 #ifndef RTREE_H
 #define RTREE_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
-typedef struct {
+typedef struct rtree_node_t {
   uint32_t len;
-  double tot_fitness; // (?)
+  bool red;
+  double lsum, rsum, tot;
+  struct rtree_node_t *link[2];
+} rtree_node_t;
+
+typedef struct {
+  rtree_node_t *root;
 } rtree_t;
 
 rtree_t *rtree_create();
