@@ -18,12 +18,12 @@ typedef struct {
 rtree_t *rtree_create();
 void rtree_destroy(rtree_t *rt);
 
-void rtree_add(rtree_t *ar, void *elt_ptr, double fitness);
+void rtree_add(rtree_t *rt, void *elt_ptr, double fitness);
 
-void *rtree_rget(rtree_t *ar);
-void *rtree_rpop(rtree_t *ar);
+void *rtree_rget(rtree_t *rt);
+void *rtree_rpop(rtree_t *rt);
 
-uint32_t rtree_length(rtree_t *ar);
-double rtree_total_fitness(rtree_t *ar);
+uint32_t rtree_length(rtree_t *rt);
+double rtree_total_fitness(rtree_t *rt);
 #endif
 
