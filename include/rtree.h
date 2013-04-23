@@ -8,7 +8,8 @@ typedef struct rtree_node_t {
   uint32_t len;
   bool red;
   void *data;
-  double lsum, rsum, fit, tot;
+  double fit, tot;
+  double link_sum[2];
   struct rtree_node_t *link[2];
 } rtree_node_t;
 
