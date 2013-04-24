@@ -63,6 +63,21 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
     root->tot += fitness;
 
     // Rebalancing
+    if is_red(root->link[dir]) {
+        if (is_red(root->link[!dir])) { // Flip
+            root->red = true;
+            root->link[0]->red = false;
+            root->link[1]->red = false;
+          }
+        else { // Rotate.
+          if (is_red(root->link[dir]->link[dir])) {
+              root = rot_once(root, !dir);
+            }
+          else if (is_red(root->link[dir]->link[!dir])) {
+            root = rot_twice(root, !dir);
+          }
+        }
+      }
 
     return root;
   }
