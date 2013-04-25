@@ -161,4 +161,42 @@ int rb_check(rtree_node_t *root) {
   }
 }
 
+#define DELTA 0.001
+#include <math.h>
+
+double total_fit_check(rtree_t *rt) {
+  if (rt->root == NULL){
+    return 0;
+  }
+  else {
+    double calc_fit = fit_check(rt->root);
+    if (fabs(calc_fit - rt->root->tot) < DELTA) {
+      return calc_fit;
+    }
+    else {
+      return -1;
+    }
+  }
+}
+
+double fit_check(rtree_node_t *root) {
+  double calc_tot = root->fit;
+  for (int i = 0; i < 2; i++) {
+    double actual = root->link_sum[i];
+    double calculated = fit_check(root->link[i]);
+    calc_tot += calculated;
+    if (fabs(actual - calculated) >= DELTA) {
+      puts("Sum doesn't add up.");
+      return -1;
+    }
+  }
+  if (fabs(calc_tot - root->tot) < DELTA) {
+    return calc_tot;
+  }
+  else {
+    puts("root->fit doesn't add up with total sum.");
+    return -1;
+  }
+}
+
 #endif

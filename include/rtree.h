@@ -31,6 +31,8 @@ double rtree_total_fitness(rtree_t *rt);
 #ifdef RTREE_DEBUG
 
 int rb_check(rtree_node_t *root);
+double total_fit_check(rtree_t *rt);
+double fit_check(rtree_node_t *root);
 
 #endif
 
