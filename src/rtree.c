@@ -165,21 +165,19 @@ int rb_check(rtree_node_t *root) {
 #include <math.h>
 
 double total_fit_check(rtree_t *rt) {
-  if (rt->root == NULL){
-    return 0;
+  double calc_fit = fit_check(rt->root);
+  if (fabs(calc_fit - rt->root->tot) < DELTA) {
+    return calc_fit;
   }
   else {
-    double calc_fit = fit_check(rt->root);
-    if (fabs(calc_fit - rt->root->tot) < DELTA) {
-      return calc_fit;
-    }
-    else {
-      return -1;
-    }
+    return -1;
   }
 }
 
 double fit_check(rtree_node_t *root) {
+  if (root == NULL) {
+    return 0;
+  }
   double calc_tot = root->fit;
   for (int i = 0; i < 2; i++) {
     double actual = root->link_sum[i];
