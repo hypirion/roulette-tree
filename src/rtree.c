@@ -120,3 +120,45 @@ void *rtree_rget(rtree_t *rt) {
     }
   }
 }
+
+#ifdef RTREE_DEBUG
+
+#include <stdio.h>
+
+int rb_check(rtree_node_t *root) {
+  int h[2];
+
+  if (root == NULL) {
+    return 1;
+  }
+  else {
+    rtree_node_t **node = root->link;
+
+    /* multiple red links */
+    if (is_red(root)) {
+      if (is_red(node[0]) || is_red(node[1])) {
+        puts("Red violation");
+        return 0;
+      }
+    }
+
+    /* check links */
+    h[0] = rb_check(node[0]);
+    h[1] = rb_check(node[1]);
+
+    /* black height mismatch */
+    if (h[0] > 0 && h[1] > 0 && h[0] != h[1]) {
+      puts("Black violation");
+      return 0;
+    }
+
+    if (h[0] > 0 && h[1] > 0) {
+      return is_red(root) ? h[0] : h[0] + 1;
+    }
+    else {
+      return 0;
+    }
+  }
+}
+
+#endif

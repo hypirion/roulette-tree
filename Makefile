@@ -1,6 +1,6 @@
 CC=$(shell which gcc)
 INCLUDEPATH= -Iinclude
-CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH} -g
+CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH} -g -DRTREE_DEBUG
 
 obj/%.o: src/%.o include/%.h obj
 	mv src/$*.o obj/

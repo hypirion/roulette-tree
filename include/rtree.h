@@ -27,5 +27,12 @@ void *rtree_rpop(rtree_t *rt);
 
 uint32_t rtree_length(rtree_t *rt);
 double rtree_total_fitness(rtree_t *rt);
+
+#ifdef RTREE_DEBUG
+
+int rb_check(rtree_node_t *root);
+
+#endif
+
 #endif
 
