@@ -60,30 +60,54 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
     return rtree_node_create(data, fitness);
   }
   else {
-    int dir = 0; // TODO: Tactical node insertions in the making.
+    rtree_node_t head = {0};
 
-    root->link[dir] = rtree_insert_node(root->link[dir], data, fitness);
-    root->link_sum[dir] += fitness;
-    root->tot += fitness;
+    rtree_node_t *g, *t, *p, *q;
+    int dir = 0, last = 2;
+    bool inserted = false;
 
-    // Rebalancing
-    if (is_red(root->link[dir])) {
-        if (is_red(root->link[!dir])) { // Flip
-            root->red = true;
-            root->link[0]->red = false;
-            root->link[1]->red = false;
-          }
-        else { // Rotate.
-          if (is_red(root->link[dir]->link[dir])) {
-              root = rot_once(root, !dir);
-            }
-          else if (is_red(root->link[dir]->link[!dir])) {
-            root = rot_twice(root, !dir);
-          }
+    t = &head;
+    g = p = NULL;
+    q = t->link[1] = root;
+
+    while (true) {
+      if (q == NULL) {
+        p->link[dir] = q = rtree_node_create(data, fitness);
+        inserted = true;
+      }
+
+      else if (is_red(q->link[0]) && is_red(q->link[1])) {
+        q->red = true;
+        q->link[0]->red = false;
+        q->link[1]->red = false;
+      }
+
+      if (is_red(q) && is_red(p)) {
+        int d2 = t->link[1] == g;
+
+        if (q == p->link[last]){
+          t->link[d2] = rot_once(g, !last);
+        }
+        else {
+          t->link[d2] = rot_twice(g, !last);
         }
       }
 
-    return root;
+      if (inserted) {
+        break;
+      }
+
+      last = dir;
+      dir = 0; // Magic work here (later on)
+
+      if (g != NULL) {
+        t = g;
+      }
+      g = p, p = q;
+      q = q->link[dir];
+    }
+
+    return head.link[1];
   }
 }
 
