@@ -126,7 +126,7 @@ void rtree_destroy(rtree_t *rt) {
 
 void rtree_add(rtree_t *rt, void *data_ptr, double fitness) {
   rt->root = rtree_insert_node(rt->root, data_ptr, fitness);
-  rt->root->red =false;
+  rt->root->red = false;
 }
 
 void *rtree_rget(rtree_t *rt) {
