@@ -21,10 +21,14 @@ static bool is_red(rtree_node_t *rt) {
 static rtree_node_t *rot_once(rtree_node_t *root, int dir) {
   rtree_node_t *ret = root->link[!dir];
 
-  // TODO: fitness must be rotated properly too.
+  root->link_sum[!dir] = ret->link_sum[dir];
+  root->tot = root->fit + root->link_sum[0] + root->link_sum[1];
 
   root->link[!dir] = ret->link[dir];
   ret->link[dir] = root;
+
+  ret->link_sum[dir] = root->tot;
+  ret->tot = ret->fit + ret->link_sum[0] + ret->link_sum[1];
 
   root->red = true;
   ret->red = false;
