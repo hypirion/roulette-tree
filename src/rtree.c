@@ -211,16 +211,22 @@ double fit_check(rtree_node_t *root) {
     double actual = root->link_sum[i];
     double calculated = fit_check(root->link[i]);
     calc_tot += calculated;
+    if (calculated == -1) {
+      return -1;
+    }
     if (fabs(actual - calculated) >= DELTA) {
       puts("Sum doesn't add up.");
+      printf("Expected %f, was %f.\n", calculated, actual);
       return -1;
     }
   }
   if (fabs(calc_tot - root->tot) < DELTA) {
+    printf("root->fit adds up (%f)\n", root->tot);
     return calc_tot;
   }
   else {
     puts("root->fit doesn't add up with total sum.");
+    printf("Expected %f, was %f.\n", calc_tot, root->tot);
     return -1;
   }
 }
