@@ -195,9 +195,12 @@ int rb_check(rtree_node_t *root) {
 double total_fit_check(rtree_t *rt) {
   double calc_fit = fit_check(rt->root);
   if (fabs(calc_fit - rt->root->tot) < DELTA) {
+    printf("root->fit adds up (%f)\n", rt->root->tot);
     return calc_fit;
   }
   else {
+    puts("root->fit doesn't add up with total sum.");
+    printf("Expected %f, was %f.\n", calc_fit, rt->root->tot);
     return -1;
   }
 }
@@ -221,12 +224,9 @@ double fit_check(rtree_node_t *root) {
     }
   }
   if (fabs(calc_tot - root->tot) < DELTA) {
-    printf("root->fit adds up (%f)\n", root->tot);
     return calc_tot;
   }
   else {
-    puts("root->fit doesn't add up with total sum.");
-    printf("Expected %f, was %f.\n", calc_tot, root->tot);
     return -1;
   }
 }
