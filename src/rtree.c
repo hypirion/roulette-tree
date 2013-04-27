@@ -75,11 +75,15 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
         p->link[dir] = q = rtree_node_create(data, fitness);
         inserted = true;
       }
-
       else if (is_red(q->link[0]) && is_red(q->link[1])) {
         q->red = true;
         q->link[0]->red = false;
         q->link[1]->red = false;
+      }
+
+      if (!inserted) {
+        q->link_sum[dir] += fitness;
+        q->tot += fitness;
       }
 
       if (is_red(q) && is_red(p)) {
