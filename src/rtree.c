@@ -231,4 +231,22 @@ double fit_check(rtree_node_t *root) {
   }
 }
 
+static void rtree_node_preorder(rtree_node_t *root, int tab) {
+  printf("%*s", tab, "");
+  if (root == NULL) {
+    printf("NULL\n");
+  }
+  else {
+    printf("{%d, [%.2f] + %.2f + [%.2f] -> %.2f}\n", root->red,
+           root->link_sum[0], root->fit, root->link_sum[1], root->tot);
+    for (int i = 0; i < 2; i++) {
+      rtree_node_preorder(root->link[i], tab + 2);
+    }
+  }
+}
+
+void rtree_preorder(rtree_t *rt) {
+  rtree_node_preorder(rt->root, 0);
+}
+
 #endif
