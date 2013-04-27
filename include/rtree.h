@@ -34,6 +34,8 @@ int rb_check(rtree_node_t *root);
 double total_fit_check(rtree_t *rt);
 double fit_check(rtree_node_t *root);
 
+void rtree_preorder(rtree_t *rt);
+
 #endif
 
 #endif
