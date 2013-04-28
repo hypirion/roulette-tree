@@ -6,7 +6,7 @@ OBJS = obj/main.o obj/rtree.o
 obj/%.o: src/%.o include/%.h obj
 	mv src/$*.o obj/
 
-all: $(OBJS)
+all: $(OBJS) bin
 	$(CC) $(OBJS) -o bin/main
 
 clean:
