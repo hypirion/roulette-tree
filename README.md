@@ -8,3 +8,9 @@ pick A 1/6 of the time, B 1/3 of the time, and C 1/2 of the time.
 
 The rtree is designed to do insertions, random picks and random pops in
 O(log n) time, and count and total frequency in O(1) time.
+
+# License
+
+Copyright © 2013 Jean Niklas L'orange
+
+Distributed The MIT License (MIT).
