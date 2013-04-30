@@ -115,6 +115,25 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
   }
 }
 
+static double rtree_find_fit(rtree_t *rt, double pick) {
+  rtree_node_t *cur = rt->root;
+  while (1) {
+    if (cur->link_sum[0] < pick) { // this or right
+      pick -= cur->link_sum[0];
+      if (pick < cur->fit) { // this
+        return cur->fit;
+      }
+      else { // right
+        pick -= cur->fit;
+        cur = cur->link[1];
+      }
+    }
+    else { // left
+      cur = cur->link[0];
+    }
+  }
+}
+
 // Public functions, available for everyone to use.
 
 rtree_t *rtree_create() {
