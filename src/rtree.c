@@ -194,9 +194,9 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
 
       g = p, p = q;
       q = q->link[dir];
-      dir = (q->data < data);
+      dir = (q->data < data_ptr);
 
-      if (q->data == data) { // save found node
+      if (q->data == data_ptr) { // save found node
         f = q;
       }
 
@@ -226,8 +226,8 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
 
               /* Set correct colours */
               q->red = g->link[d2]->red = 1;
-              g->link[dir2]->link[0]->red = 0;
-              g->link[dir2]->link[1]->red = 0;
+              g->link[d2]->link[0]->red = 0;
+              g->link[d2]->link[1]->red = 0;
             }
           }
         }
@@ -237,16 +237,16 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
     if (f != NULL) {
       f->data = q->data;
       /* so I heard you like difficult expressions */
-      p->link[p->link[1] == q] = q->link[q-link[0] == NULL];
+      p->link[p->link[1] == q] = q->link[q->link[0] == NULL];
       free(q);
     }
     else {
       // If this happens, then I've done something horribly wrong.
     }
 
-    tree->root = head.link[1];
-    if (tree->root != NUL) {
-      tree->root->red = 0;
+    rt->root = head.link[1];
+    if (rt->root != NULL) {
+      rt->root->red = 0;
     }
   }
 }
