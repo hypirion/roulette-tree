@@ -172,6 +172,85 @@ void *rtree_rget(rtree_t *rt) {
   }
 }
 
+void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
+  rtree_node_t *cur = rt->root;
+  double pick = drand48() * cur->tot;
+  double fit_to_remove = rtree_find_fit(rt, pick);
+  void *data_ptr = NULL;
+  if (rt->root != NULL) {
+    rtree_node_t head = {0};
+    double fit_left = pick;
+
+    rtree_node_t *q, *p, *g;
+    rtree_node_t *f = NULL; /* the found item */
+    int dir = 1;
+
+    q = &head;
+    g = p = NULL;
+    q->link[1] = rt->root;
+
+    while (q->link[dir] != NULL) {
+      int last = dir;
+
+      g = p, p = q;
+      q = q->link[dir];
+      dir = (q->data < data);
+
+      if (q->data == data) { // save found node
+        f = q;
+      }
+
+      /* Push red node down */
+      if (is_red(q) && !is_red(q->link[dir])) {
+        if (is_red(q->link[!dir])) {
+          p = p->link[last] = rot_once(q, dir);
+        }
+        else if (!is_red(q->link[!dir])) {
+          rtree_node_t *s = p->link[!last];
+
+          if (s != NULL) {
+            if (!is_red(s->link[!last]) && !is_red(s->link[last])) {
+              /* basic colour flip here */
+              p->red = 0;
+              s->red = 1;
+              q->red = 1;
+            }
+            else {
+              int d2 = (g->link[1] == p);
+              if (is_red(s->link[last])) {
+                g->link[d2] = rot_twice(p, last);
+              }
+              else if (is_red(s->link[!last])) {
+                g->link[d2] = rot_once(p, last);
+              }
+
+              /* Set correct colours */
+              q->red = g->link[d2]->red = 1;
+              g->link[dir2]->link[0]->red = 0;
+              g->link[dir2]->link[1]->red = 0;
+            }
+          }
+        }
+      }
+    }
+
+    if (f != NULL) {
+      f->data = q->data;
+      /* so I heard you like difficult expressions */
+      p->link[p->link[1] == q] = q->link[q-link[0] == NULL];
+      free(q);
+    }
+    else {
+      // If this happens, then I've done something horribly wrong.
+    }
+
+    tree->root = head.link[1];
+    if (tree->root != NUL) {
+      tree->root->red = 0;
+    }
+  }
+}
+
 #ifdef RTREE_DEBUG
 
 #include <stdio.h>
