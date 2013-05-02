@@ -371,4 +371,44 @@ void rtree_preorder(rtree_t *rt) {
   rtree_node_preorder(rt->root, 0);
 }
 
+static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
+                            const int counter) {
+  if (root == NULL)
+    return counter;
+  else {
+    int link_names[2] = {0};
+    for (int i = 0; i < 2; i++) {
+      link_names[i] = rtree_to_dot_rec(out, root->link[i], counter);
+    }
+    const int mid = link_names[2-1] + 1;
+    fprintf(out, "  s%.3d [label=\"%ld\"];\n", mid, (long) root->data);
+    const int this = mid + 1;
+    fprintf(out,
+            "  s%.3d [label=\"{{%s | %d} | %f | {<0>%f |<m>%f | <1>%f}}];\"\n",
+            this,  root->red ? "red" : "black", root->len, root->tot,
+            root->link_sum[0], root->fit, root->link_sum[1]);
+
+    int prev_link = counter;
+    for (int i = 0; i < 2; i++) {
+      if (link_names[i] == prev_link) {
+        continue;
+      }
+      else {
+        fprintf(out, "  s%.3d:%d -> s%.3d;\n", this, i, link_names[i]);
+        prev_link = link_names[i];
+      }
+    }
+    fprintf(out, "  s%.3d:m -> s%.3d;\n", this, mid);
+    return this;
+  }
+}
+
+void rtree_to_dot(rtree_t *rt, char *loch) {
+  FILE *out = fopen(loch, "r");
+  fprintf(out, "digraph g {\n  node [shape=record];\n");
+  rtree_to_dot_rec(out, rt->root, 0);
+  fprintf(out, "}\n");
+  fclose(out);
+}
+
 #endif

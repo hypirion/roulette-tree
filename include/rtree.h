@@ -36,6 +36,8 @@ double fit_check(rtree_node_t *root);
 
 void rtree_preorder(rtree_t *rt);
 
+void rtree_to_dot(rtree_t *rt, char *loch);
+
 #endif
 
 #endif
