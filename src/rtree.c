@@ -176,6 +176,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
   rtree_node_t *cur = rt->root;
   double pick = drand48() * cur->tot;
   double fit_to_remove = rtree_find_fit(rt, pick);
+  const double fit_to_remove = rtree_find_fit(rt, pick);
   void *data_ptr = NULL;
   if (rt->root != NULL) {
     rtree_node_t head = {0};
@@ -183,6 +184,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
 
     rtree_node_t *q, *p, *g;
     rtree_node_t *f = NULL; /* the found item */
+    bool found = false;
     int dir = 1;
 
     q = &head;
@@ -193,11 +195,27 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
       int last = dir;
 
       g = p, p = q;
-      q = q->link[dir];
-      dir = (q->data < data_ptr);
+      if (!found) {
+        q->link_sum[dir] -= fit_to_remove;
+        q->tot -= fit_to_remove;
+      }
 
-      if (q->data == data_ptr) { // save found node
-        f = q;
+      q = q->link[dir];
+      
+      /* which direction to go */
+      if (q->link_sum[0] < fit_left) { // right or this one
+        fit_left -= q->link_sum[0];
+        dir = 1;
+        if (pick < cur->fit) { // save found node
+          f = q;
+          found = true;
+        }
+        else { // right
+          fit_left -= q->fit;
+        }
+      }
+      else { // go left
+        dir = 0;
       }
 
       /* Push red node down */
@@ -235,6 +253,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
     }
 
     if (f != NULL) {
+      data_ptr = f->data; // I suppose?
       f->data = q->data;
       /* so I heard you like difficult expressions */
       p->link[p->link[1] == q] = q->link[q->link[0] == NULL];
@@ -249,6 +268,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
       rt->root->red = 0;
     }
   }
+    return data_ptr;
 }
 
 #ifdef RTREE_DEBUG
