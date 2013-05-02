@@ -377,8 +377,10 @@ static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
     return counter;
   else {
     int link_names[2] = {0};
+    int prev_link = counter;
     for (int i = 0; i < 2; i++) {
-      link_names[i] = rtree_to_dot_rec(out, root->link[i], counter);
+      prev_link =
+        link_names[i] = rtree_to_dot_rec(out, root->link[i], prev_link);
     }
     const int mid = link_names[2-1] + 1;
     fprintf(out, "  s%.3d [label=\"%ld\"];\n", mid, (long) root->data);
@@ -388,7 +390,7 @@ static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
             this,  root->red ? "red" : "black", root->len, root->tot,
             root->link_sum[0], root->fit, root->link_sum[1]);
 
-    int prev_link = counter;
+    prev_link = counter;
     for (int i = 0; i < 2; i++) {
       if (link_names[i] == prev_link) {
         continue;
