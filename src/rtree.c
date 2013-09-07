@@ -228,9 +228,9 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
           if (s != NULL) {
             if (!is_red(s->link[!last]) && !is_red(s->link[last])) {
               /* basic colour flip here */
-              p->red = 0;
-              s->red = 1;
-              q->red = 1;
+              p->red = true;
+              s->red = false;
+              q->red = false;
             }
             else {
               int d2 = (g->link[1] == p);
@@ -267,7 +267,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
       rt->root->red = 0;
     }
   }
-    return data_ptr;
+  return data_ptr;
 }
 
 #ifdef RTREE_DEBUG
