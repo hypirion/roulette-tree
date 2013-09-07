@@ -200,7 +200,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
       }
 
       q = q->link[dir];
-      
+
       /* which direction to go */
       if (q->link_sum[0] < fit_left) { // right or this one
         fit_left -= q->link_sum[0];
@@ -228,9 +228,9 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
           if (s != NULL) {
             if (!is_red(s->link[!last]) && !is_red(s->link[last])) {
               /* basic colour flip here */
-              p->red = true;
-              s->red = false;
-              q->red = false;
+              p->red = false;
+              s->red = true;
+              q->red = true;
             }
             else {
               int d2 = (g->link[1] == p);
@@ -252,10 +252,23 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
     }
 
     if (f != NULL) {
-      data_ptr = f->data; // I suppose?
+      data_ptr = f->data;
+
+      // If we haven't been able to bubble down a red node, colour flip a bit
+      // more
+      if (!is_red(q)) {
+        rtree_node_t *s = p->link[p->link[1] != q];
+        p->red = false;
+        s->red = true;
+        // TODO: This is probably not sufficient.
+      }
+
+      // Bubbling this value upwards.. May not be as pretty as we'd like it to.
       f->data = q->data;
-      /* so I heard you like difficult expressions */
+      /* Set p's link to q to q's child, if any exist. */
       p->link[p->link[1] == q] = q->link[q->link[0] == NULL];
+
+
       free(q);
     }
     else {
