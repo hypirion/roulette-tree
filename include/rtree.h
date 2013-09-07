@@ -5,10 +5,10 @@
 #include <stdint.h>
 
 typedef struct rtree_node_t {
-  uint32_t len;
   bool red;
   void *data;
   double fit, tot;
+  uint32_t len[2];
   double link_sum[2];
   struct rtree_node_t *link[2];
 } rtree_node_t;

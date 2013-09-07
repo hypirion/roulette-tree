@@ -24,6 +24,9 @@ static rtree_node_t *rot_once(rtree_node_t *root, int dir) {
   root->link_sum[!dir] = ret->link_sum[dir];
   root->tot = root->fit + root->link_sum[0] + root->link_sum[1];
 
+  root->len[!dir] = ret->len[dir];
+  ret->len[dir] += root->len[dir] + 1;
+
   root->link[!dir] = ret->link[dir];
   ret->link[dir] = root;
 
@@ -46,6 +49,8 @@ static rtree_node_t *rtree_node_create(void *data, double fitness) {
   node->data = data;
   node->fit = fitness;
   node->tot = fitness;
+  node->len[0] = 0;
+  node->len[1] = 0;
   node->link_sum[0] = 0;
   node->link_sum[1] = 0;
   node->red = true;
@@ -83,6 +88,7 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
 
       if (!inserted) {
         q->link_sum[dir] += fitness;
+        q->len[dir]++;
         q->tot += fitness;
       }
 
@@ -397,10 +403,10 @@ static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
     const int mid = link_names[2-1] + 1;
     fprintf(out, "  s%.3d [label=\"%ld\"];\n", mid, (long) root->data);
     const int this = mid + 1;
-    fprintf(out, "  s%.3d [label=\"{{%s | %d} | %.2f |"
+    fprintf(out, "  s%.3d [label=\"{{%s | %d | %d} | %.2f |"
                  "{<0>%.2f |<m>%.2f | <1>%.2f}}\"];\n",
-            this,  root->red ? "red" : "black", root->len, root->tot,
-            root->link_sum[0], root->fit, root->link_sum[1]);
+            this,  root->red ? "red" : "black", root->len[0], root->len[1],
+            root->tot, root->link_sum[0], root->fit, root->link_sum[1]);
 
     prev_link = counter;
     for (int i = 0; i < 2; i++) {
