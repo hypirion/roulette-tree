@@ -68,12 +68,13 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
     rtree_node_t head = {0};
 
     rtree_node_t *g, *t, *p, *q;
-    int dir = 0, last = 2;
+    int last = 2;
     bool inserted = false;
 
     t = &head;
     g = p = NULL;
     q = t->link[1] = root;
+    int dir = q->len[0] > q->len[1];
 
     while (true) {
       if (q == NULL) {
@@ -84,12 +85,6 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
         q->red = true;
         q->link[0]->red = false;
         q->link[1]->red = false;
-      }
-
-      if (!inserted) {
-        q->link_sum[dir] += fitness;
-        q->len[dir]++;
-        q->tot += fitness;
       }
 
       if (is_red(q) && is_red(p)) {
@@ -108,7 +103,11 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
       }
 
       last = dir;
-      dir = 0; // Magic work here (later on)
+      dir = q->len[0] > q->len[1];
+
+      q->link_sum[dir] += fitness;
+      q->len[dir]++;
+      q->tot += fitness;
 
       if (g != NULL) {
         t = g;
