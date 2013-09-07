@@ -242,9 +242,9 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
               }
 
               /* Set correct colours */
-              q->red = g->link[d2]->red = 1;
-              g->link[d2]->link[0]->red = 0;
-              g->link[d2]->link[1]->red = 0;
+              q->red = g->link[d2]->red = true;
+              g->link[d2]->link[0]->red = false;
+              g->link[d2]->link[1]->red = false;
             }
           }
         }
@@ -264,7 +264,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
 
     rt->root = head.link[1];
     if (rt->root != NULL) {
-      rt->root->red = 0;
+      rt->root->red = false;
     }
   }
   return data_ptr;
