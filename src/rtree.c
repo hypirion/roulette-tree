@@ -175,7 +175,6 @@ void *rtree_rget(rtree_t *rt) {
 void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
   rtree_node_t *cur = rt->root;
   double pick = drand48() * cur->tot;
-  double fit_to_remove = rtree_find_fit(rt, pick);
   const double fit_to_remove = rtree_find_fit(rt, pick);
   void *data_ptr = NULL;
   if (rt->root != NULL) {
