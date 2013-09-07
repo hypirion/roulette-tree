@@ -203,6 +203,7 @@ void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
       if (!found) {
         q->link_sum[dir] -= fit_to_remove;
         q->tot -= fit_to_remove;
+        q->len[dir]--;
       }
 
       q = q->link[dir];
