@@ -34,7 +34,7 @@ population is contained within a rtree and the new individuals in an array of
 size *n+m*, a function to create a new population may look like this:
 
 ```c
-void destroy_genotype_rtree(rtree_t rt) {
+void destroy_genotype_rtree(rtree_t *rt) {
     // If you don't need to free memory, you can skip this loop and just do
     // rtree_destroy(rt)
     while (rtree_size(rt)) {
@@ -44,7 +44,7 @@ void destroy_genotype_rtree(rtree_t rt) {
     rtree_destroy(rt);
 }
 
-rtree_t *make_gen(rtree_t old_gen, genotype *new_gen_arr, int n, int m) {
+rtree_t *make_gen(rtree_t *old_gen, genotype *new_gen_arr, int n, int m) {
     rtree_t *combined = rtree_create();
 
     // Add n individials from old gen
