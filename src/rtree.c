@@ -185,7 +185,6 @@ void *rtree_rpop(rtree_t *rt) {
     /* Pick a random element */
     const double pick = drand48() * root->tot;
     const double fitness = rtree_find_fit(rt, pick);
-    printf("Will pick element with %f fitness\n", fitness);
     double fit_left = pick;
 
     /* Helpers */
@@ -299,7 +298,7 @@ void *rtree_rpop(rtree_t *rt) {
       rt->root->red = false;
     }
     return data_ptr;
-  } else if (rt->root == NULL) {
+  } else { // if (rt->root == NULL)
     return NULL;
   }
 }
