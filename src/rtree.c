@@ -311,6 +311,14 @@ uint32_t rtree_count(rtree_t *rt) {
   }
 }
 
+double rtree_total_fitness(rtree_t *rt) {
+  if (rt->root == NULL) {
+    return 0;
+  } else {
+    return rt->root->tot;
+  }
+}
+
 #ifdef RTREE_DEBUG
 
 #include <stdio.h>
