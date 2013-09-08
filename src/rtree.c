@@ -180,29 +180,36 @@ void *rtree_rget(rtree_t *rt) {
 void *rtree_rpop(rtree_t *rt) {
   if (rt->root != NULL) {
     void *data_ptr = NULL;
-    const rtree_node_t *root = rt->root;
+    rtree_node_t *root = rt->root;
 
     /* Pick a random element */
     const double pick = drand48() * root->tot;
     const double fitness = rtree_find_fit(rt, pick);
+    printf("Will pick element with %f fitness\n", fitness);
     double fit_left = pick;
 
     /* Helpers */
-    rtree_t head = {0};
-    rtree_t *cur, *parent, *grandparent;
-    rtree_t *found = NULL; /* TODO: is this needed? */
+    rtree_node_t head = {0};
+    rtree_node_t *cur, *parent, *grandparent;
 
     cur = &head;
     parent = grandparent = NULL;
     cur->link[1] = root;
 
     int dir = 1;
+    bool found = false;
+    int prev_dir = 0;
 
     while (cur->link[dir] != NULL) {
-      int prev_dir = dir;
+      prev_dir = dir;
 
       /* Update helpers */
       grandparent = parent, parent = cur;
+      cur->len[dir]--;
+      if (!found) {
+        cur->tot -= fitness;
+        cur->link_sum[dir] -= fitness;
+      }
       cur = cur->link[dir];
 
       /* pick direction here */
@@ -212,24 +219,30 @@ void *rtree_rpop(rtree_t *rt) {
           fit_left -= cur->link_sum[0];
           dir = 1;
           if (fit_left < cur->fit) {
-            /**
-                TODO: What happens when we find the element in this node? And
-                when do we find it? Unanswered questions as of now.
-            **/
             found = true;
-            data_ptr = q->data;
+            data_ptr = cur->data;
+            /* Will modify dir when bubbling up values. */
           }
         }
         else { /* If the element is in the left child tree.*/
           dir = 0;
         }
       }
-      else if (found) {
+
+      if (found) {
         /* Pick the largest tree and walk that one. */
         dir = cur->link_sum[0] < cur->link_sum[1];
-      }
 
-      /* We need to bubble up values here if we've found our goal. */
+        /* Bubble up value and fitness from child. */
+        if (cur->link[dir] != NULL) {
+          const rtree_node_t *child = cur->link[dir];
+
+          cur->tot -= cur->fit;
+          cur->fit = child->fit;
+          cur->link_sum[dir] -= child->fit;
+          cur->data = child->data;
+        }
+      }
 
       /* Push red nodes downwards */
       if (is_red(cur) && !is_red(cur->link[dir])) {
@@ -243,20 +256,20 @@ void *rtree_rpop(rtree_t *rt) {
 
           if (cur_sibling != NULL) {
             /* If both sibling's children are black */
-            if (!is_red(cur_sibling->link[0] &&
-                !is_red(cur_sibling->link[1]))) {
+            if (!is_red(cur_sibling->link[0]) &&
+                !is_red(cur_sibling->link[1])) {
               /* Bubble down redness */
               parent->red = false;
               cur->red = true;
               cur_sibling->red = true;
             }
             else {
-              int gramp_dir = grandparent->link[1] == p;
+              int gramp_dir = grandparent->link[1] == parent;
 
               if (is_red(cur_sibling->link[prev_dir])) {
                 grandparent->link[gramp_dir] = rot_twice(parent, prev_dir);
               }
-              else if (is_red(cur_sibling->[!prev_dir])) {
+              else if (is_red(cur_sibling->link[!prev_dir])) {
                 grandparent->link[gramp_dir] = rot_once(parent, prev_dir);
               }
 
@@ -273,16 +286,18 @@ void *rtree_rpop(rtree_t *rt) {
       }
     }
 
-    /* Slaughter the last node here (parent) */
+    /* Slaughter the last node here */
     /* TODO: This *may* cause problems when we only have one element left. */
-    free(parent);
+
+    parent->link[prev_dir] = NULL;
+    free(cur);
 
     /* Update root and make it black */
-    tree->root = head.link[1];
-    if (tree->root != NULL) {
-      tree->root->red = false;
+    rt->root = head.link[1];
+    if (rt->root != NULL) {
+      rt->root->red = false;
     }
-
+    return data_ptr;
   } else if (rt->root == NULL) {
     return NULL;
   }
