@@ -217,6 +217,8 @@ void *rtree_rpop(rtree_t *rt) {
             found = true;
             data_ptr = cur->data;
             /* Will modify dir when bubbling up values. */
+          } else {
+            fit_left -= cur->fit;
           }
         }
         else { /* If the element is in the left child tree.*/
