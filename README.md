@@ -1,8 +1,5 @@
 # Roulette tree
 
-**NB: This data structure does not currently work as intended. It will break if
-  you attempt to use it**
-
 A roulette tree (abbreviated *rtree*) is a data structure which allows one to
 pick a random item based on relative frequency in logarithmic time. If you for
 instance have three items: A, B and C, and A has a frequency of 1, B has a
@@ -34,12 +31,12 @@ A roulette tree is rather easy to use. As an example, consider an algorithm
 where you have an *n+m*-sized population, and you pick *n* individuals from the
 old generation and *m* individuals from the new one. Assuming that the old
 population is contained within a rtree and the new individuals in an array of
-size *m*, a function to create a new population may look like this:
+size *n+m*, a function to create a new population may look like this:
 
 ```c
 void destroy_genotype_rtree(rtree_t rt) {
     // If you don't need to free memory, you can skip this loop and just do
-    // rtree_destroy.
+    // rtree_destroy(rt)
     while (rtree_size(rt)) {
       genotype *g = (genotype *) rtree_rpop(rt);
       genotype_destroy(g);
@@ -49,6 +46,7 @@ void destroy_genotype_rtree(rtree_t rt) {
 
 rtree_t *make_gen(rtree_t old_gen, genotype *new_gen_arr, int n, int m) {
     rtree_t *combined = rtree_create();
+
     // Add n individials from old gen
     for (int i = 0; i < n; i++) {
         genotype *chosen = (genotype *) rtree_rpop(old_gen);
@@ -71,7 +69,6 @@ rtree_t *make_gen(rtree_t old_gen, genotype *new_gen_arr, int n, int m) {
     return combined;
 }
 ```
-
 
 # License
 

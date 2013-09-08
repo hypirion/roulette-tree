@@ -205,11 +205,6 @@ void *rtree_rpop(rtree_t *rt) {
 
       /* Update helpers */
       grandparent = parent, parent = cur;
-      cur->len[dir]--;
-      if (!found) {
-        cur->tot -= fitness;
-        cur->link_sum[dir] -= fitness;
-      }
       cur = cur->link[dir];
 
       /* pick direction here */
@@ -229,7 +224,11 @@ void *rtree_rpop(rtree_t *rt) {
         }
       }
 
-      if (found) {
+      if (!found) {
+        cur->tot -= fitness;
+        cur->link_sum[dir] -= fitness;
+      }
+      else if (found) {
         /* Pick the largest tree and walk that one. */
         dir = cur->link_sum[0] < cur->link_sum[1];
 
@@ -243,6 +242,8 @@ void *rtree_rpop(rtree_t *rt) {
           cur->data = child->data;
         }
       }
+
+      cur->len[dir]--;
 
       /* Push red nodes downwards */
       if (!is_red(cur) && !is_red(cur->link[dir])) {
