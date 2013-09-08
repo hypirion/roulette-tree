@@ -287,8 +287,6 @@ void *rtree_rpop(rtree_t *rt) {
     }
 
     /* Slaughter the last node here */
-    /* TODO: This *may* cause problems when we only have one element left. */
-
     parent->link[prev_dir] = NULL;
     free(cur);
 
@@ -347,6 +345,9 @@ int rb_check(rtree_node_t *root) {
 #include <math.h>
 
 double total_fit_check(rtree_t *rt) {
+  if (rt->root == NULL) {
+    return 0.0;
+  }
   double calc_fit = fit_check(rt->root);
   if (fabs(calc_fit - rt->root->tot) < DELTA) {
     printf("root->fit adds up (%f)\n", rt->root->tot);
