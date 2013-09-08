@@ -1,5 +1,8 @@
 # Roulette tree
 
+**NB: This data structure does not currently work as intended. It will break if
+  you attempt to use it**
+
 A roulette tree (abbreviated *rtree*) is a data structure which allows one to
 pick a random item based on relative frequency in logarithmic time. If you for
 instance have three items: A, B and C, and A has a frequency of 1, B has a
