@@ -303,7 +303,7 @@ void *rtree_rpop(rtree_t *rt) {
   }
 }
 
-uint32_t rtree_count(rtree_t *rt) {
+uint32_t rtree_size(rtree_t *rt) {
   if (rt->root == NULL) {
     return 0;
   } else {
