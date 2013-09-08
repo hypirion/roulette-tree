@@ -24,6 +24,7 @@ void rtree_add(rtree_t *rt, void *elt_ptr, double fitness);
 
 void *rtree_rget(rtree_t *rt);
 void *rtree_rpop(rtree_t *rt);
+uint32_t rtree_count(rtree_t *rt);
 
 uint32_t rtree_length(rtree_t *rt);
 double rtree_total_fitness(rtree_t *rt);

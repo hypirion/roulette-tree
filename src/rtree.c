@@ -301,6 +301,14 @@ void *rtree_rpop(rtree_t *rt) {
   }
 }
 
+uint32_t rtree_count(rtree_t *rt) {
+  if (rt->root == NULL) {
+    return 0;
+  } else {
+    return rt->root->len[0] + 1 + rt->root->len[1];
+  }
+}
+
 #ifdef RTREE_DEBUG
 
 #include <stdio.h>
