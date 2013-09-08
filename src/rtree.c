@@ -177,116 +177,115 @@ void *rtree_rget(rtree_t *rt) {
   }
 }
 
-void *rtree_rpop(rtree_t *rt) { // Can assume that there is at least one elem
-  rtree_node_t *cur = rt->root;
-  double pick = drand48() * cur->tot;
-  const double fit_to_remove = rtree_find_fit(rt, pick);
-  void *data_ptr = NULL;
+void *rtree_rpop(rtree_t *rt) {
   if (rt->root != NULL) {
-    rtree_node_t head = {0};
+    void *data_ptr = NULL;
+    const rtree_node_t *root = rt->root;
+
+    /* Pick a random element */
+    const double pick = drand48() * root->tot;
+    const double fitness = rtree_find_fit(rt, pick);
     double fit_left = pick;
 
-    rtree_node_t *q, *p, *g;
-    rtree_node_t *f = NULL; /* the found item */
-    bool found = false;
+    /* Helpers */
+    rtree_t head = {0};
+    rtree_t *cur, *parent, *grandparent;
+    rtree_t *found = NULL; /* TODO: is this needed? */
+
+    cur = &head;
+    parent = grandparent = NULL;
+    cur->link[1] = root;
+
     int dir = 1;
 
-    q = &head;
-    g = p = NULL;
-    q->link[1] = rt->root;
+    while (cur->link[dir] != NULL) {
+      int prev_dir = dir;
 
-    while (q->link[dir] != NULL) {
-      int last = dir;
+      /* Update helpers */
+      grandparent = parent, parent = cur;
+      cur = cur->link[dir];
 
-      g = p, p = q;
+      /* pick direction here */
       if (!found) {
-        q->link_sum[dir] -= fit_to_remove;
-        q->tot -= fit_to_remove;
-        q->len[dir]--;
-      }
-
-      q = q->link[dir];
-
-      /* which direction to go */
-      if (q->link_sum[0] < fit_left) { // right or this one
-        fit_left -= q->link_sum[0];
-        dir = 1;
-        if (pick < cur->fit) { // save found node
-          f = q;
-          found = true;
+        /* If the element is not in the left child tree. */
+        if (cur->link_sum[0] < fit_left) {
+          fit_left -= cur->link_sum[0];
+          dir = 1;
+          if (fit_left < cur->fit) {
+            /**
+                TODO: What happens when we find the element in this node? And
+                when do we find it? Unanswered questions as of now.
+            **/
+            found = true;
+            data_ptr = q->data;
+          }
         }
-        else { // right
-          fit_left -= q->fit;
+        else { /* If the element is in the left child tree.*/
+          dir = 0;
         }
       }
-      else { // go left
-        dir = 0;
+      else if (found) {
+        /* Pick the largest tree and walk that one. */
+        dir = cur->link_sum[0] < cur->link_sum[1];
       }
 
-      /* Push red node down */
-      if (is_red(q) && !is_red(q->link[dir])) {
-        if (is_red(q->link[!dir])) {
-          p = p->link[last] = rot_once(q, dir);
-        }
-        else if (!is_red(q->link[!dir])) {
-          rtree_node_t *s = p->link[!last];
+      /* We need to bubble up values here if we've found our goal. */
 
-          if (s != NULL) {
-            if (!is_red(s->link[!last]) && !is_red(s->link[last])) {
-              /* basic colour flip here */
-              p->red = false;
-              s->red = true;
-              q->red = true;
+      /* Push red nodes downwards */
+      if (is_red(cur) && !is_red(cur->link[dir])) {
+        if (is_red(cur->link[!dir])) {
+          /* next element (black) we'll go down has a red sibling */
+          /* Rotate once in direction we're walking. */
+          parent = parent->link[prev_dir] = rot_once(cur, dir);
+        }
+        else if (!is_red(cur->link[!dir])) {
+          rtree_node_t *cur_sibling = parent->link[!prev_dir];
+
+          if (cur_sibling != NULL) {
+            /* If both sibling's children are black */
+            if (!is_red(cur_sibling->link[0] &&
+                !is_red(cur_sibling->link[1]))) {
+              /* Bubble down redness */
+              parent->red = false;
+              cur->red = true;
+              cur_sibling->red = true;
             }
             else {
-              int d2 = (g->link[1] == p);
-              if (is_red(s->link[last])) {
-                g->link[d2] = rot_twice(p, last);
+              int gramp_dir = grandparent->link[1] == p;
+
+              if (is_red(cur_sibling->link[prev_dir])) {
+                grandparent->link[gramp_dir] = rot_twice(parent, prev_dir);
               }
-              else if (is_red(s->link[!last])) {
-                g->link[d2] = rot_once(p, last);
+              else if (is_red(cur_sibling->[!prev_dir])) {
+                grandparent->link[gramp_dir] = rot_once(parent, prev_dir);
               }
 
-              /* Set correct colours */
-              q->red = g->link[d2]->red = true;
-              g->link[d2]->link[0]->red = false;
-              g->link[d2]->link[1]->red = false;
+              /* Make sure that the colours are correct: New child of
+                 grandparent and current node should be red, whereas the
+                 children of the new child of grandparent should be black
+                 (obviously) */
+              cur->red = grandparent->link[gramp_dir]->red = true;
+              grandparent->link[gramp_dir]->link[0]->red = false;
+              grandparent->link[gramp_dir]->link[1]->red = false;
             }
           }
         }
       }
     }
 
-    if (f != NULL) {
-      data_ptr = f->data;
+    /* Slaughter the last node here (parent) */
+    /* TODO: This *may* cause problems when we only have one element left. */
+    free(parent);
 
-      // If we haven't been able to bubble down a red node, colour flip a bit
-      // more
-      if (!is_red(q)) {
-        rtree_node_t *s = p->link[p->link[1] != q];
-        p->red = false;
-        s->red = true;
-        // TODO: This is probably not sufficient.
-      }
-
-      // Bubbling this value upwards.. May not be as pretty as we'd like it to.
-      f->data = q->data;
-      /* Set p's link to q to q's child, if any exist. */
-      p->link[p->link[1] == q] = q->link[q->link[0] == NULL];
-
-
-      free(q);
-    }
-    else {
-      // If this happens, then I've done something horribly wrong.
+    /* Update root and make it black */
+    tree->root = head.link[1];
+    if (tree->root != NULL) {
+      tree->root->red = false;
     }
 
-    rt->root = head.link[1];
-    if (rt->root != NULL) {
-      rt->root->red = false;
-    }
+  } else if (rt->root == NULL) {
+    return NULL;
   }
-  return data_ptr;
 }
 
 #ifdef RTREE_DEBUG
