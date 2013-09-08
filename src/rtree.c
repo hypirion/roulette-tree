@@ -245,7 +245,7 @@ void *rtree_rpop(rtree_t *rt) {
       }
 
       /* Push red nodes downwards */
-      if (is_red(cur) && !is_red(cur->link[dir])) {
+      if (!is_red(cur) && !is_red(cur->link[dir])) {
         if (is_red(cur->link[!dir])) {
           /* next element (black) we'll go down has a red sibling */
           /* Rotate once in direction we're walking. */
@@ -260,8 +260,8 @@ void *rtree_rpop(rtree_t *rt) {
                 !is_red(cur_sibling->link[1])) {
               /* Bubble down redness */
               parent->red = false;
-              cur->red = true;
               cur_sibling->red = true;
+              cur->red = true;
             }
             else {
               int gramp_dir = grandparent->link[1] == parent;
