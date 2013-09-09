@@ -1,0 +1,23 @@
+body {
+    width: 900px;
+    margin: 0 auto;
+    background: #cccccc;
+    font-size: larger;
+    font-family: 'Merriweather Sans', sans-serif;
+}
+
+h1, h2, h3, h4 {text-align: left;}
+
+#wrapper {
+    background: white;
+    box-shadow: 1px 1px 5px 2px #444;
+}
+
+#content {
+    padding-top: 40px;
+    padding-bottom: 50px;
+    width: 640px;
+    margin: 25px auto;
+    text-align: justify;
+    line-height: 1.5em;
+}

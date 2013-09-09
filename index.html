@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Roulette Tree</title>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:300' rel='stylesheet' type='text/css'>
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript"
+            src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-26233521-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="content">
+        <h1>Roulette Tree</h1>
+        <p>A roulette tree (<em>rtree</em>) is a data structure aimed to speed
+          up selection phases in evolutionary algorithms, specifically when one
+          pick individuals for a new generation based upon fitness-proportionate
+          selection methods. It is asymptotically better than current solutions,
+          and will consequently run faster for large populations.
+        </p>
+        <h2>The Problem</h2>
+        <p>The general problem can be described as follows: You have a
+        population of individuals, where you want to pick some percentage of the
+        population based on how fit they are (their <em>fitness</em>). However,
+        you would avoid picking a single individual multiple times, and you want
+        to to have randomness so you don't always pick the top \(n\) best
+        individuals all the time (to keep diversity in the population).</p>
+        <p>As an example, let's say we have three different objects: \(A\),
+        \(B\) and \(C\). \(fit(A)=3\), \(fit(B)=2\) and \(fit(C)=1\). Then, on
+        average, \(A\) will be picked \(^3/_6\) of the times, \(B\) will be
+        picked \(^2/_6\) of the times, and \(C\) will be picked \(^1/_6\) of the
+        times.</p>
+        <p>The way this is usually done is by simulating a roulette wheel: We
+        list all the individuals we have, and let the individual hold a piece
+        of the roulette wheel proportional to the individual's fitness. To pick
+        an individual, we pick a random number and let the individual which
+        contains the number in its fitness interval. See the figure below for
+        an example.</p>
+        <p style="text-align:center;"><img src="imgs/selection.png" alt="wuhoo"/>
+          <em>Example of selection.</em> </p>
+<!--        <p>\(\mathcal{O}(\log n)\)</p> -->
+      </div>
+    </div>
+  </body>
+</html>
+
