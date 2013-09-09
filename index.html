@@ -31,6 +31,7 @@
           selection methods. It is asymptotically better than current solutions,
           and will consequently run faster for large populations.
         </p>
+
         <h2>The Problem</h2>
         <p>The general problem can be described as follows: You have a
         population of individuals, where you want to pick some percentage of the
@@ -49,10 +50,12 @@
         an individual, we pick a random number and let the individual which
         contains the number in its fitness interval. See the figure below for
         an example.</p>
-        <p style="text-align:center;"><img src="imgs/selection.png" alt="wuhoo"/>
+        <p style="text-align:center;"><img src="imgs/selection.png"
+                                           alt="Example of Selection"/>
           <em>Example of selection.</em> </p>
         <p>The two standard ways of doing this sort of simulation is done by
         either using an <em>array</em>, or by using a <em>linked list</em>.</p>
+
         <h3>Linked List solution</h3>
         <p>The linked list solution is the easiest to understand conceptually.
         The structure is simply the total fitness score of the population, along
@@ -82,12 +85,21 @@
         gives us \(\mathcal{O}(\log n)\) in asymptotic runtime for random
         picks.</p>
         <p>Unfortunately, this is not sufficient for random pops: We must remove
-        the individual, and propagate the new cumulative fitness upwards for
-        every element after the current one. This takes \(\mathcal{O}(n)\) in
-        worst case time.</p>
+        the individual, and update the new cumulative fitness for every element
+        after the current one. This takes \(\mathcal{O}(n)\) time.</p>
         <p>If one double the capacity of the array whenever the capacity is
         filled, then adding a new element takes \(\mathcal{O}(1)\) amortized
         time.</p>
+
+        <h3>Roulette tree</h3>
+        <p>It is possible to improve the asymptotic time taken to randomly pop
+        an element, at the expense of a slower insertion algorithm. This is
+        what the <em>rtree</em> does: Sacrifices insertion speeds for increased
+        random pops.</p>
+        <p>The roulette tree is very complex compared to the other structures,
+        but you can think of it as a red-black tree combined with a
+        fenwick-tree. This makes both insertion, random picks and random pops
+        take \(\mathcal{O}(\log n)\) time.</p>
       </div>
     </div>
   </body>
