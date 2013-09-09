@@ -68,8 +68,27 @@
         <p>Inserting an individual is easy and fast, however. Just put the
         individual as the first element in the list, and you're done. That
         takes \(\mathcal{O}(1)\) time.</p>
+
+        <h3>Array-based solution</h3>
+        <p>The array-based roulette utilizes binary searches to reduce the speed
+        of random picks. We keep track of the total fitness score, and an array
+        containing the cumulative fitness sum up to this individual, along with
+        the individual itself.</p>
+        <p>To perform a random pick, pick a random number \(d &lt; fit_{total}\)
+        as before. Now, perform a binary search where you go <em>down</em> if
+        \(d &lt; c\), where \(c\) is the cumulative sum at the current
+        individual. If \(c \leq d &lt; (c + fit)\), we've found the individual
+        we wanted to find. If \((c + fit) \leq d\), we go <em>up</em>. This
+        gives us \(\mathcal{O}(\log n)\) in asymptotic runtime for random
+        picks.</p>
+        <p>Unfortunately, this is not sufficient for random pops: We must remove
+        the individual, and propagate the new cumulative fitness upwards for
+        every element after the current one. This takes \(\mathcal{O}(n)\) in
+        worst case time.</p>
+        <p>If one double the capacity of the array whenever the capacity is
+        filled, then adding a new element takes \(\mathcal{O}(1)\) amortized
+        time.</p>
       </div>
     </div>
   </body>
 </html>
-
