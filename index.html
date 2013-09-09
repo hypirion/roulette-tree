@@ -100,6 +100,39 @@
         but you can think of it as a red-black tree combined with a
         fenwick-tree. This makes both insertion, random picks and random pops
         take \(\mathcal{O}(\log n)\) time.</p>
+
+        <h2>Comparison</h2>
+        <p>Different needs for different people. If you need to repeatedly pop
+        random individuals, I suggest going for the roulette tree. Otherwise,
+        the array-based solution should handle most of your use cases. The
+        linked list implementation is effectively useless, you can in all cases
+        replace it with the array based one and get a speedup.</p>
+        <table border="1">
+          <tr>
+            <th>Structure</th>
+            <th>Add</th>
+            <th>Pop</th>
+            <th>Get</th>
+          </tr>
+          <tr>
+            <td>Linked List</td>
+            <td>\(\mathcal{O}(1)\)</td>
+            <td>\(\mathcal{O}(n)\)</td>
+            <td>\(\mathcal{O}(n)\)</td>
+          </tr>
+          <tr>
+            <td>Array-based</td>
+            <td>\(\mathcal{O}(1)\)</td>
+            <td>\(\mathcal{O}(n)\)</td>
+            <td>\(\mathcal{O}(\log n)\)</td>
+          </tr>
+          <tr>
+            <td>Roulette tree</td>
+            <td>\(\mathcal{O}(\log n)\)</td>
+            <td>\(\mathcal{O}(\log n)\)</td>
+            <td>\(\mathcal{O}(\log n)\)</td>
+          </tr>
+        </table>
       </div>
     </div>
   </body>
