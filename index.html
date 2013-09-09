@@ -51,7 +51,23 @@
         an example.</p>
         <p style="text-align:center;"><img src="imgs/selection.png" alt="wuhoo"/>
           <em>Example of selection.</em> </p>
-<!--        <p>\(\mathcal{O}(\log n)\)</p> -->
+        <p>The two standard ways of doing this sort of simulation is done by
+        either using an <em>array</em>, or by using a <em>linked list</em>.</p>
+        <h3>Linked List solution</h3>
+        <p>The linked list solution is the easiest to understand conceptually.
+        The structure is simply the total fitness score of the population, along
+        witha linked list with the individuals and their fitness score, To
+        randomly pick an individual, you pick a random number, \(d &lt;
+        fit_{total}\) and iterate over the linked list. If the current
+        individual's fitness is higher than \(d\), we pick the individual. If
+        not, decrement \(d\) with the fitness of the individual and continue to
+        next element. Now, if you want to remove the individual, you can do so
+        while you're here (either by keeping track of the previous individual or
+        by using a doubly linked list). Both operations take \(\mathcal{O}(n)\)
+        time, which is not exactly good for large populations.</p>
+        <p>Inserting an individual is easy and fast, however. Just put the
+        individual as the first element in the list, and you're done. That
+        takes \(\mathcal{O}(1)\) time.</p>
       </div>
     </div>
   </body>
