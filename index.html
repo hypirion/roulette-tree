@@ -133,6 +133,45 @@
             <td>\(\mathcal{O}(\log n)\)</td>
           </tr>
         </table>
+
+        <h2>Further Work</h2>
+        <p>Yeah, this sounds obviously more and more like some paper in a
+        scientific journal. Let's not go into specific details, just explain
+        that I'm aware of certain tricks to speed these structures up for
+        certain use cases. We'll have a short look at the different
+        possibilities.</p>
+        <h3>Single-rpop roulette array</h3>
+        <p>A single-rpop roulette array is a structure supporting
+        \(\mathcal{O}(1)\) insertion times, and \(\mathcal{O}(\log n)\) random
+        picks. It will also support a persistent random pop in
+        \(\mathcal{O}(\log n)\) time, which will return the chosen individual,
+        along with a roulette array where you can only perform random picks (in
+        \(\mathcal{O}(\log n)\) time).</p>
+        <h3>Fenwick-based roulette array</h3>
+        <p>When you already know the size of the collection, the individuals
+        and their fitness, you can speed up all the actions available. By
+        removing the possibility to add in new elements after instantiation, we
+        can get a \(\mathcal{O}(\log n)\) speed on random pops and random
+        picks. The speed of construction will be \(\mathcal{O}(n\log n)\).</p>
+        <p>Intially, this sounds like a rather useless idea: The asymptotic
+        runtime doesn't even change! However, the constant is significantly
+        reduced, and if you perform repeated rpops/rpicks without adding in new
+        elements, this gives a significant speedup. Consequently, it speeds up
+        the structure dramatically if you don't have to add in new individuals
+        to the structure.</p>
+        <h3>Sorted roulette trees</h3>
+        <p>Sorted roulette trees will have the possibility to pick elements
+        based upon their fitness. Such a tree will have the same properties as
+        a <code>NavigableSet</code> and a <code>SortedSet</code> in Java, in
+        \(\mathcal{O}(n\log n)\). The constant factor will be increased by a
+        slight amount, but not considerably.</p>
+        <h3>Persistent roulette trees</h3>
+        <p>A persistent roulette tree will behave exactly as a normal roulette
+        tree with the same asymptotic runtimes, but with a slightly higher
+        constant factor. It will return persistent roulette trees, and will
+        consequently be a tree usable in parallel. It may also implement the
+        sorted roulette guarantees, again with a somewhat higher constant
+        factor.</p>
       </div>
     </div>
   </body>
