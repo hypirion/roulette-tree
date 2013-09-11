@@ -32,6 +32,21 @@
           and will consequently run faster for large populations.
         </p>
 
+        <h3>Quickstart</h3>
+        <p>To build the rtree and see it in action, fetch the code from git and
+        build the thing. Assuming you have <code>git</code>, <code>make</code>
+        and <code>gcc</code>, you just have to do this:</p>
+        <code><pre>git clone https://github.com/hyPiRion/roulette-tree.git rtree
+cd rtree
+make</pre></code>
+        <p>To see an explanation on how it works, you can do as follows. This
+        requires graphviz installed (more specifically, <code>dot</code>):</p>
+        <code><pre>bin/main
+cd imgs
+make</pre></code>
+        <p>A sequence of images from test-00 to test-11 should now have been
+        generated. View them in sequence to "comprehend" what's going on.</p>
+
         <h2>The Problem</h2>
         <p>The general problem can be described as follows: You have a
         population of individuals, where you want to pick some percentage of the
@@ -40,10 +55,10 @@
         to to have randomness so you don't always pick the top \(n\) best
         individuals all the time (to keep diversity in the population).</p>
         <p>As an example, let's say we have three different objects: \(A\),
-        \(B\) and \(C\). \(fit(A)=3\), \(fit(B)=2\) and \(fit(C)=1\). Then, on
-        average, \(A\) will be picked \(^3/_6\) of the times, \(B\) will be
-        picked \(^2/_6\) of the times, and \(C\) will be picked \(^1/_6\) of the
-        times.</p>
+        \(B\) and \(C\). \(fit(A)=3\), \(fit(B)=2\) and \(fit(C)=1\). Then, we
+        want that, on average, \(A\) will be picked \(^3/_6\) of the time, \(B\)
+        will be picked \(^2/_6\) of the time, and \(C\) will be picked \(^1/_6\)
+        of the time.</p>
         <p>The way this is usually done is by simulating a roulette wheel: We
         list all the individuals we have, and let the individual hold a piece
         of the roulette wheel proportional to the individual's fitness. To pick
