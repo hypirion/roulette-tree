@@ -1,20 +1,27 @@
 CC=$(shell which gcc)
 INCLUDEPATH= -Iinclude
 CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH} -g -DRTREE_DEBUG
-OBJS = obj/main.o obj/rtree.o
+OBJDIR = obj
+OBJS = $(addprefix $(OBJDIR)/,main.o rtree.o)
 
-obj/%.o: src/%.o include/%.h obj
-	mv src/$*.o obj/
+EXEC = bin/main
 
-all: $(OBJS) bin
-	$(CC) $(OBJS) -o bin/main
+$(OBJDIR)/%.o: src/%.c include/%.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+all: $(EXEC)
+
+$(EXEC): $(OBJS) bin
+	$(CC) $(OBJS) -o $(EXEC)
 
 clean:
-	-rm -rf obj
+	-rm -rf $(OBJDIR)
 purge: clean
 	-rm -rf bin
 
+$(OBJS): | $(OBJDIR)
+
 bin:
 	mkdir bin
-obj:
-	mkdir obj
+$(OBJDIR):
+	mkdir $(OBJDIR)
