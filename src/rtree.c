@@ -458,7 +458,7 @@ static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
 
 void rtree_to_dot(rtree_t *rt, char *loch) {
   FILE *out = fopen(loch, "w");
-  fprintf(out, "digraph g {\n  node [shape=record];\n");
+  fprintf(out, "digraph g {\n  bgcolor=transparent\n  node [shape=record];\n");
   rtree_to_dot_rec(out, rt->root, 0);
   fprintf(out, "}\n");
   fclose(out);
