@@ -1,4 +1,4 @@
 *~
 *.o
-obj
 /bin/main
+/test/bin/main
