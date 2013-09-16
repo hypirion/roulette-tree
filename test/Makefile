@@ -7,6 +7,11 @@ OBJS = $(addprefix $(OBJDIR)/,main.o rtree.o)
 
 EXEC = bin/main
 
+$(OBJDIR)/rtree.o: ../src/rtree.c ../include/rtree.h
+	@$(MAKE) -C .. -q $(OBJDIR)/rtree.o || \
+   $(MAKE) --no-print-directory -C .. $(OBJDIR)/rtree.o
+	cp ../$(OBJDIR)/rtree.o $(OBJDIR)/
+
 $(OBJDIR)/%.o: src/%.c include/%.h
 	$(CC) $(CFLAGS) -c $< -o $@
 

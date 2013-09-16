@@ -18,11 +18,6 @@ $(EXEC): $(OBJS) bin
 	$(CC) $(OBJS) -o $(EXEC)
 
 test: $(OBJS)
-	@-$(MAKE) -q -C test $(OBJDIR) || \
-	if [ $$? -ne 0 ]; then \
-		$(MAKE) --no-print-directory -C test $(OBJDIR); \
-		cp $(OBJDIR)/rtree.o test/$(OBJDIR)/rtree.o; \
-	fi
 	@$(MAKE) --no-print-directory -C test test
 
 clean:
