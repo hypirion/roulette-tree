@@ -28,7 +28,7 @@ static char *test_all_kept() {
     }
     for (int i = 0; i < count; i++) {
       char *err_msg = calloc(80, sizeof(char));
-      sprintf(err_msg, "Expected exactly 1 elt with value %d, but was %d\n", i,
+      sprintf(err_msg, "Expected exactly 1 elt with value %d, but was %d.", i,
               recvd[i]);
       mu_assert(err_msg, recvd[i] == 1);
       free(err_msg);
@@ -55,12 +55,39 @@ static char *test_duplicates() {
   }
   for (uintptr_t elt = 0; elt < elts; elt++) {
     char *msg = calloc(80, sizeof(char));
-    sprintf(msg, "Expected %d elements for %ld, not %d.\n", nof_insertions, elt,
+    sprintf(msg, "Expected %d elements for %ld, not %d.", nof_insertions, elt,
             count[elt]);
     mu_assert(msg, count[elt] == nof_insertions);
     free(msg);
   }
   free(count);
+  return 0;
+}
+
+static char *test_duplicate_probabilities() {
+  puts("Testing that duplicates doesn't share probabilities.");
+  const uintptr_t a = 42;
+  const uintptr_t b = 1337;
+  const int size = 10000;
+  int count = 0;
+  REPEAT(size) {
+    rtree_t *rt = rtree_create();
+    REPEAT(3) {rtree_add(rt, (void *) a, 1.0);}
+    REPEAT(2) {rtree_add(rt, (void *) b, 1.0);}
+
+    // Picking at least one a out of two means picking no b's.
+    // For uniform probability, that is 1 - (2/5 * 1/4) = 0.9
+    REPEAT(2) {
+      if (rtree_rpop(rt) == (void *) a) {
+        count++;
+        break;
+      }
+    }
+    rtree_destroy(rt);
+  }
+  double freq = ((double) count)/size;
+  // printf("Frequency: %f\n", freq);
+  mu_assert("Frequency too improbable", 0.9 - 0.01 < freq && freq < 0.9 + 0.01);
   return 0;
 }
 
@@ -151,7 +178,7 @@ static char *test_uniform_frequency() {
     double freq = ((double) count[i])/size;
     if (!(prob - 0.005 < freq && freq < prob + 0.005)) {
       char *err_msg = calloc(80, sizeof(char));
-      sprintf(err_msg, "Expected frequency for %d to be within %.4f and %.4f, was %.4f\n",
+      sprintf(err_msg, "Expected frequency for %d to be within %.4f and %.4f, was %.4f",
               i, prob - 0.005, prob + 0.005, freq);
       return err_msg;
     }
@@ -164,6 +191,7 @@ static char *test_uniform_frequency() {
 static char *all_tests() {
   mu_run_test(test_all_kept);
   mu_run_test(test_duplicates);
+  mu_run_test(test_duplicate_probabilities);
   mu_run_test(test_consistent_fitness);
   mu_run_test(test_rb_invariants);
   mu_run_test(test_nonuniform_frequency);
