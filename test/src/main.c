@@ -83,7 +83,7 @@ static char *test_rb_invariants() {
 }
 
 static char *test_nonuniform_frequency() {
-  puts("Testing that nonuniform frequency (probably) works correctly.");
+  puts("Testing nonuniform frequency.");
   rtree_t *rt = rtree_create();
   rtree_add(rt, (void *) ((uintptr_t) 0), 1.0);
   rtree_add(rt, (void *) ((uintptr_t) 1), 9.0);
@@ -102,13 +102,39 @@ static char *test_nonuniform_frequency() {
   return 0;
 }
 
-
+static char *test_uniform_frequency() {
+  puts("Testing uniform frequency.");
+  rtree_t *rt = rtree_create();
+  const int elems = 100;
+  for (uintptr_t i = 0; i < elems; i++) {
+    rtree_add(rt, (void *) i, 1.0);
+  }
+  const int size = 100000;
+  const double prob = 1.0/((double) elems);
+  int *count = calloc(elems, sizeof(int));
+  for (int i = 0; i < size; i++) {
+    count[(uintptr_t) rtree_rget(rt)]++;
+  }
+  for (int i = 0; i < elems; i++) {
+    double freq = ((double) count[i])/size;
+    if (!(prob - 0.005 < freq && freq < prob + 0.005)) {
+      char *err_msg = calloc(80, sizeof(char));
+      sprintf(err_msg, "Expected frequency for %d to be within %.4f and %.4f, was %.4f\n",
+              i, prob - 0.005, prob + 0.005, freq);
+      return err_msg;
+    }
+  }
+  free(count);
+  rtree_destroy(rt);
+  return 0;
+}
 
 static char *all_tests() {
   mu_run_test(test_all_kept);
   mu_run_test(test_consistent_fitness);
   mu_run_test(test_rb_invariants);
   mu_run_test(test_nonuniform_frequency);
+  mu_run_test(test_uniform_frequency);
   return 0;
 }
 
