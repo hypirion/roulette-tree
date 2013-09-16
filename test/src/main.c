@@ -82,10 +82,33 @@ static char *test_rb_invariants() {
   return 0;
 }
 
+static char *test_nonuniform_frequency() {
+  puts("Testing that nonuniform frequency (probably) works correctly.");
+  rtree_t *rt = rtree_create();
+  rtree_add(rt, (void *) ((uintptr_t) 0), 1.0);
+  rtree_add(rt, (void *) ((uintptr_t) 1), 9.0);
+  const int picks = 10000;
+  int count[2] = {0, 0};
+  for (int i = 0; i < picks; i++) {
+    count[(uintptr_t) rtree_rget(rt)]++;
+  }
+  // printf("Frequency for 0.1 value: %.4f\n", ((double) count[0])/picks);
+  // printf("Frequency for 0.9 value: %.4f\n", ((double) count[1])/picks);
+  double val = ((double) count[0])/picks;
+  // TODO: 99% confidence intervals? need something more sane here.
+  mu_assert("Frequency is too improbable.",
+            0.1 - 0.01 < val && val < 0.1 + 0.01);
+  rtree_destroy(rt);
+  return 0;
+}
+
+
+
 static char *all_tests() {
   mu_run_test(test_all_kept);
   mu_run_test(test_consistent_fitness);
   mu_run_test(test_rb_invariants);
+  mu_run_test(test_nonuniform_frequency);
   return 0;
 }
 
