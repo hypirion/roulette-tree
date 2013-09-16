@@ -368,7 +368,7 @@ double total_fit_check(rtree_t *rt) {
   }
   double calc_fit = fit_check(rt->root);
   if (fabs(calc_fit - rt->root->tot) < DELTA) {
-    printf("root->fit adds up (%f)\n", rt->root->tot);
+    // printf("root->fit adds up (%f)\n", rt->root->tot);
     return calc_fit;
   }
   else {
