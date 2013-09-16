@@ -9,12 +9,13 @@
 #define __GENSYM1(x,y) __GENSYM2(x,y)
 #define GENSYM(x) __GENSYM1(x,__COUNTER__)
 
-#define __REPEAT(name, n) for (int name = 0; name < n; name++)
-#define REPEAT(n) __REPEAT(GENSYM(iter), n)
+#define FOR(name, n) for (int name = 0; name < n; name++)
+#define REPEAT(n) FOR(GENSYM(iter), n)
 
 int tests_run = 0;
+int tests_failed = 0;
 
-static char *test_all_kept() {
+static int test_all_kept() {
   puts("Testing that inserted elements doesn't disappear or duplicate.");
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
@@ -39,7 +40,7 @@ static char *test_all_kept() {
   return 0;
 }
 
-static char *test_duplicates() {
+static int test_duplicates() {
   puts("Testing that duplicates are allowed.");
   rtree_t *rt = rtree_create();
   const int elts = 10;
@@ -64,7 +65,7 @@ static char *test_duplicates() {
   return 0;
 }
 
-static char *test_duplicate_probabilities() {
+static int test_duplicate_probabilities() {
   puts("Testing that duplicates doesn't share probabilities.");
   const uintptr_t a = 42;
   const uintptr_t b = 1337;
@@ -91,7 +92,7 @@ static char *test_duplicate_probabilities() {
   return 0;
 }
 
-static char *test_consistent_fitness() {
+static int test_consistent_fitness() {
   puts("Testing that the fitness of a randomly mutated rtree is consistent.");
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
@@ -116,7 +117,7 @@ static char *test_consistent_fitness() {
   return 0;
 }
 
-static char *test_rb_invariants() {
+static int test_rb_invariants() {
   puts("Testing that the red-black trees keep the red-black invariants.");
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
@@ -141,7 +142,7 @@ static char *test_rb_invariants() {
   return 0;
 }
 
-static char *test_nonuniform_frequency() {
+static int test_nonuniform_frequency() {
   puts("Testing nonuniform frequency.");
   rtree_t *rt = rtree_create();
   rtree_add(rt, (void *) ((uintptr_t) 0), 1.0);
@@ -161,7 +162,7 @@ static char *test_nonuniform_frequency() {
   return 0;
 }
 
-static char *test_uniform_frequency() {
+static int test_uniform_frequency() {
   puts("Testing uniform frequency.");
   rtree_t *rt = rtree_create();
   const int elems = 100;
@@ -177,10 +178,9 @@ static char *test_uniform_frequency() {
   for (int i = 0; i < elems; i++) {
     double freq = ((double) count[i])/size;
     if (!(prob - 0.005 < freq && freq < prob + 0.005)) {
-      char *err_msg = calloc(80, sizeof(char));
-      sprintf(err_msg, "Expected frequency for %d to be within %.4f and %.4f, was %.4f",
-              i, prob - 0.005, prob + 0.005, freq);
-      return err_msg;
+      printf("[FAIL] Expected frequency for %d to be within %.4f and %.4f, was "
+             "%.4f.\n", i, prob - 0.005, prob + 0.005, freq);
+      return 1;
     }
   }
   free(count);
@@ -188,7 +188,7 @@ static char *test_uniform_frequency() {
   return 0;
 }
 
-static char *all_tests() {
+static void all_tests() {
   mu_run_test(test_all_kept);
   mu_run_test(test_duplicates);
   mu_run_test(test_duplicate_probabilities);
@@ -196,18 +196,17 @@ static char *all_tests() {
   mu_run_test(test_rb_invariants);
   mu_run_test(test_nonuniform_frequency);
   mu_run_test(test_uniform_frequency);
-  return 0;
 }
 
 int main() {
-  char *result = all_tests();
-  if (result != 0) {
-    printf("%s\n", result);
+  all_tests();
+  if (tests_failed) {
+    printf("%d test%s failed.\n", tests_failed, tests_failed == 1 ? "" : "s");
   }
   else {
     printf("All tests passed.\n");
   }
   printf("Tests run: %d\n", tests_run);
 
-  return result != 0;
+  return tests_failed != 0;
 }
