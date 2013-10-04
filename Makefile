@@ -1,5 +1,4 @@
 CC=$(shell which gcc)
-INCLUDEPATH= -Iinclude
 CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH} -g -DRTREE_DEBUG
 OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,main.o rtree.o)
@@ -9,7 +8,7 @@ EXEC = bin/main
 
 .PHONY: test
 
-$(OBJDIR)/%.o: src/%.c include/%.h
+$(OBJDIR)/%.o: src/%.c src/%.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(EXEC)

@@ -1,18 +1,18 @@
 CC=$(shell which gcc)
-LIBPATH= -I../include
-INCLUDEPATH= $(LIBPATH) -Iinclude
+LIBPATH= -I../src
+INCLUDEPATH= $(LIBPATH)
 CFLAGS+= -std=gnu99 -Wall $(COPT) ${INCLUDEPATH} -g -DRTREE_DEBUG
 OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/,main.o rtree.o)
 
 EXEC = bin/main
 
-$(OBJDIR)/rtree.o: ../src/rtree.c ../include/rtree.h
+$(OBJDIR)/rtree.o: ../src/rtree.c ../src/rtree.h
 	@$(MAKE) -C .. -q $(OBJDIR)/rtree.o || \
    $(MAKE) --no-print-directory -C .. $(OBJDIR)/rtree.o
 	cp ../$(OBJDIR)/rtree.o $(OBJDIR)/
 
-$(OBJDIR)/%.o: src/%.c include/%.h
+$(OBJDIR)/%.o: src/%.c src/%.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(EXEC)
