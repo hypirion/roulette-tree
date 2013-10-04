@@ -1,4 +1,4 @@
-# Roulette tree
+# Roulette tree [![Build Status](https://travis-ci.org/hyPiRion/roulette-tree.png)](https://travis-ci.org/hyPiRion/roulette-tree)
 
 A roulette tree (abbreviated *rtree*) is a data structure which allows one to
 pick a random item based on relative frequency in logarithmic time. If you for

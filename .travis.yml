@@ -1,0 +1,3 @@
+script: make test
+language: c
+compiler: gcc
