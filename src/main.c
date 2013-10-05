@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   seed48((short unsigned int *)&seed);
   rtree_t *rt = rtree_create();
   for (int i = 0; i < 12; i++) {
-    rtree_add(rt, (void *) ((long) (i + 1)), (double) drand48());
+    rtree_add(rt, (void *) ((long) (i + 1)), ((double)rand()/(double)RAND_MAX));
   }
   printf("Now removing items...\n\n");
   for (int i = 0; i < 12; i++) {

@@ -182,7 +182,7 @@ void rtree_add(rtree_t *rt, void *data_ptr, double fitness) {
 
 void *rtree_rget(rtree_t *rt) {
   rtree_node_t *cur = rt->root;
-  double pick = drand48() * cur->tot;
+  double pick = ((double) rand()/(double) RAND_MAX) * cur->tot;
   while (1) {
     if (cur->link_sum[0] < pick) { // this or right
       pick -= cur->link_sum[0];
@@ -206,7 +206,7 @@ void *rtree_rpop(rtree_t *rt) {
     rtree_node_t *root = rt->root;
 
     /* Pick a random element */
-    const double pick = drand48() * root->tot;
+    const double pick = ((double) rand()/(double) RAND_MAX) * root->tot;
     const double fitness = rtree_find_fit(rt, pick);
     double fit_left = pick;
 

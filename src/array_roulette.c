@@ -77,12 +77,14 @@ static int aroulette_bsearch(aroulette_t *a, double pick) {
 
 void *aroulette_rget(aroulette_t *ar) {
   double pick = drand48() * ar->tot_fitness;
+  double pick = ((double) rand()/(double) RAND_MAX) * ar->tot_fitness;
   int index = aroulette_bsearch(ar, pick);
   return ar->arr[index].elt_ptr;
 }
 
 void *aroulette_rpop(aroulette_t *ar) {
   double pick = drand48() * ar->tot_fitness;
+  double pick = ((double) rand()/(double) RAND_MAX) * ar->tot_fitness;
   int index = aroulette_bsearch(ar, pick);
   aroulette_elt elt = ar->arr[index];
   double rm_fitness = elt.fit_to - elt.fit_from;

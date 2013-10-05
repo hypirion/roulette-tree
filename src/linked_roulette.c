@@ -56,6 +56,7 @@ void linked_add(linked_t *root, void *elt_ptr, double fitness) {
 
 void *linked_rget(linked_t *root) {
   double pick = drand48() * root->tot_fitness;
+  double pick = ((double) rand()/(double) RAND_MAX) * root->tot_fitness;
   double accum = 0;
   linked_ll *cur = root->lptr;
   while (1) {
@@ -71,6 +72,7 @@ void *linked_rget(linked_t *root) {
 
 void *linked_rpop(linked_t *root) {
   double pick = drand48() * root->tot_fitness;
+  double pick = ((double) rand()/(double) RAND_MAX) * root->tot_fitness;
   double accum = 0;
   linked_ll *prev = NULL;
   linked_ll *cur = root->lptr;

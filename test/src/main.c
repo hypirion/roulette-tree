@@ -20,7 +20,7 @@ static int test_all_kept() {
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
     for (uintptr_t i = 0; i < count; i++) {
-      rtree_add(rt, (void *) i, (double) drand48());
+      rtree_add(rt, (void *) i, ((double) rand()/(double) RAND_MAX));
     }
     char *recvd = calloc(count, sizeof(char));
     for (int i = 0; i < count; i++) {
@@ -96,16 +96,16 @@ static int test_consistent_fitness() {
   puts("Testing that the fitness of a randomly mutated rtree is consistent.");
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
-    uint32_t rounds = (uint32_t) lrand48() % 50;
+    uint32_t rounds = (uint32_t) rand() % 50;
     REPEAT (rounds) {
-      uint32_t insertions = (uint32_t) lrand48() % 50;
+      uint32_t insertions = (uint32_t) rand() % 50;
       REPEAT (insertions) {
-        rtree_add(rt, (void *) NULL, drand48() * 15.0);
+        rtree_add(rt, (void *) NULL, ((double) rand()/(double) RAND_MAX) * 15.0);
         mu_assert("Total fitness doesn't add up", 0.0 <= total_fit_check(rt));
       }
       uint32_t deletions = 0;
       if (rtree_size(rt) > 0) { // Avoid division by zero
-        deletions = ((uint32_t) lrand48()) % rtree_size(rt);
+        deletions = ((uint32_t) rand()) % rtree_size(rt);
       }
       REPEAT (deletions) {
         rtree_rpop(rt);
@@ -121,16 +121,16 @@ static int test_rb_invariants() {
   puts("Testing that the red-black trees keep the red-black invariants.");
   for (int count = 0; count < 1000; count++) {
     rtree_t *rt = rtree_create();
-    uint32_t rounds = (uint32_t) lrand48() % 50;
+    uint32_t rounds = (uint32_t) rand() % 50;
     REPEAT (rounds) {
-      uint32_t insertions = (uint32_t) lrand48() % 50;
+      uint32_t insertions = (uint32_t) rand() % 50;
       REPEAT (insertions) {
-        rtree_add(rt, (void *) NULL, drand48() * 15.0);
+        rtree_add(rt, (void *) NULL, ((double) rand()/(double) RAND_MAX) * 15.0);
         mu_assert("Red-black violation.", rb_check(rt->root) > 0);
       }
       uint32_t deletions = 0;
       if (rtree_size(rt) > 0) { // Avoid division by zero
-        deletions = ((uint32_t) lrand48()) % rtree_size(rt);
+        deletions = ((uint32_t) rand()) % rtree_size(rt);
       }
       REPEAT (deletions) {
         rtree_rpop(rt);
