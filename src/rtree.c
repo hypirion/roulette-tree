@@ -459,9 +459,11 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
     const int mid = link_names[2-1] + 1;
     fprintf(out, "  s%.3d [label=\"%ld\"];\n", mid, (long) root->data);
     const int this = mid + 1;
-    fprintf(out, "  s%.3d [label=\"{{%s | %d | %d} | %.2f |"
+    fprintf(out, "  s%.3d [style=filled, fillcolor=%s, "
+                 "label=\"{{%s | %d | %d} | %.2f |"
                  "{<0>%.2f |<m>%.2f | <1>%.2f}}\"];\n",
-            this,  root->red ? "red" : "black", root->len[0], root->len[1],
+            this, root->red ? "lightpink" : "gray80",
+            root->red ? "red" : "black", root->len[0], root->len[1],
             root->tot, root->link_sum[0], root->fit, root->link_sum[1]);
 
     prev_link = counter;
