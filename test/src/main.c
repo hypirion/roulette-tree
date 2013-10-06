@@ -18,7 +18,7 @@ int tests_failed = 0;
 static int test_all_kept() {
   puts("Testing that inserted elements doesn't disappear or duplicate.");
   for (int count = 0; count < 1000; count++) {
-    rtree_t *rt = rtree_create();
+    RTree *rt = rtree_create();
     for (uintptr_t i = 0; i < count; i++) {
       rtree_add(rt, (void *) i, ((double) rand()/(double) RAND_MAX));
     }
@@ -42,7 +42,7 @@ static int test_all_kept() {
 
 static int test_duplicates() {
   puts("Testing that duplicates are allowed.");
-  rtree_t *rt = rtree_create();
+  RTree *rt = rtree_create();
   const int elts = 10;
   const int nof_insertions = 10;
   for (uintptr_t elt = 0; elt < elts; elt++) {
@@ -72,7 +72,7 @@ static int test_duplicate_probabilities() {
   const int size = 10000;
   int count = 0;
   REPEAT(size) {
-    rtree_t *rt = rtree_create();
+    RTree *rt = rtree_create();
     REPEAT(3) {rtree_add(rt, (void *) a, 1.0);}
     REPEAT(2) {rtree_add(rt, (void *) b, 1.0);}
 
@@ -95,7 +95,7 @@ static int test_duplicate_probabilities() {
 static int test_consistent_fitness() {
   puts("Testing that the fitness of a randomly mutated rtree is consistent.");
   for (int count = 0; count < 1000; count++) {
-    rtree_t *rt = rtree_create();
+    RTree *rt = rtree_create();
     uint32_t rounds = (uint32_t) rand() % 50;
     REPEAT (rounds) {
       uint32_t insertions = (uint32_t) rand() % 50;
@@ -120,7 +120,7 @@ static int test_consistent_fitness() {
 static int test_rb_invariants() {
   puts("Testing that the red-black trees keep the red-black invariants.");
   for (int count = 0; count < 1000; count++) {
-    rtree_t *rt = rtree_create();
+    RTree *rt = rtree_create();
     uint32_t rounds = (uint32_t) rand() % 50;
     REPEAT (rounds) {
       uint32_t insertions = (uint32_t) rand() % 50;
@@ -144,7 +144,7 @@ static int test_rb_invariants() {
 
 static int test_nonuniform_frequency() {
   puts("Testing nonuniform frequency.");
-  rtree_t *rt = rtree_create();
+  RTree *rt = rtree_create();
   rtree_add(rt, (void *) ((uintptr_t) 0), 1.0);
   rtree_add(rt, (void *) ((uintptr_t) 1), 9.0);
   const int picks = 10000;
@@ -164,7 +164,7 @@ static int test_nonuniform_frequency() {
 
 static int test_uniform_frequency() {
   puts("Testing uniform frequency.");
-  rtree_t *rt = rtree_create();
+  RTree *rt = rtree_create();
   const int elems = 100;
   for (uintptr_t i = 0; i < elems; i++) {
     rtree_add(rt, (void *) i, 1.0);

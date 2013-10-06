@@ -25,26 +25,27 @@
 #define LINKED_ROULETTE_H
 #include <stdint.h>
 
-typedef struct ll {
+typedef struct LL {
   void *car;
   double fitness;
-  struct ll *cdr;
-} linked_ll;
+  struct LL *cdr;
+} LinkedLL;
 
 typedef struct {
-  linked_ll *lptr;
+  LinkedLL *lptr;
   uint32_t length;
   double tot_fitness;
-} linked_t;
+} Linked;
 
-linked_t *linked_create();
-void linked_destroy(linked_t *root);
+Linked *linked_create();
+void linked_destroy(Linked *root);
 
-void linked_add(linked_t *root, void *elt_ptr, double fitness);
+void linked_add(Linked *root, void *elt_ptr, double fitness);
 
-void *linked_rget(linked_t *root);
-void *linked_rpop(linked_t *root);
+void *linked_rget(Linked *root);
+void *linked_rpop(Linked *root);
 
-uint32_t linked_length(linked_t *root);
-double linked_total_fitness(linked_t *root);
+uint32_t linked_length(Linked *root);
+double linked_total_fitness(Linked *root);
+
 #endif

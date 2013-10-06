@@ -25,15 +25,15 @@
 #include <stdlib.h>
 #include "linked_roulette.h"
 
-linked_t *linked_create() {
-  linked_t *lt = (linked_t *) malloc(sizeof(linked_t));
+Linked *linked_create() {
+  Linked *lt = (Linked *) malloc(sizeof(Linked));
   lt->lptr = NULL;
   lt->length = 0;
   lt->tot_fitness = 0;
   return lt;
 }
 
-void linked_destroy(linked_t *root) {
+void linked_destroy(Linked *root) {
   linked_ll *ll = root->lptr;
   while (ll != NULL) {
     linked_ll *temp = ll;
@@ -43,7 +43,7 @@ void linked_destroy(linked_t *root) {
   free(root);
 }
 
-void linked_add(linked_t *root, void *elt_ptr, double fitness) {
+void linked_add(Linked *root, void *elt_ptr, double fitness) {
   linked_ll *tail = root->lptr;
   linked_ll *head = (linked_ll *) malloc(sizeof(linked_ll));
   head->car = elt_ptr;
@@ -54,8 +54,7 @@ void linked_add(linked_t *root, void *elt_ptr, double fitness) {
   root->tot_fitness += fitness;
 }
 
-void *linked_rget(linked_t *root) {
-  double pick = drand48() * root->tot_fitness;
+void *linked_rget(Linked *root) {
   double pick = ((double) rand()/(double) RAND_MAX) * root->tot_fitness;
   double accum = 0;
   linked_ll *cur = root->lptr;
@@ -70,8 +69,7 @@ void *linked_rget(linked_t *root) {
   }
 }
 
-void *linked_rpop(linked_t *root) {
-  double pick = drand48() * root->tot_fitness;
+void *linked_rpop(Linked *root) {
   double pick = ((double) rand()/(double) RAND_MAX) * root->tot_fitness;
   double accum = 0;
   linked_ll *prev = NULL;
@@ -99,10 +97,10 @@ void *linked_rpop(linked_t *root) {
   }
 }
 
-uint32_t linked_length(linked_t *root) {
+uint32_t linked_length(Linked *root) {
   return root->length;
 }
 
-double linked_total_fitness(linked_t *root) {
+double linked_total_fitness(Linked *root) {
   return root->tot_fitness;
 }

@@ -29,7 +29,7 @@
 int main(int argc, char **argv) {
   long seed = ((long) time(0)) << 16;
   seed48((short unsigned int *)&seed);
-  rtree_t *rt = rtree_create();
+  RTree *rt = rtree_create();
   for (int i = 0; i < 12; i++) {
     rtree_add(rt, (void *) ((long) (i + 1)), ((double)rand()/(double)RAND_MAX));
   }

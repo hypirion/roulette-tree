@@ -28,7 +28,7 @@
 
 // Private functions, used inside the structure.
 
-static void dfs_destroy(rtree_node_t *rnode) {
+static void dfs_destroy(RTreeNode *rnode) {
   if (rnode == NULL) {
     return;
   }
@@ -37,12 +37,12 @@ static void dfs_destroy(rtree_node_t *rnode) {
   free(rnode);
 }
 
-static bool is_red(rtree_node_t *rt) {
+static bool is_red(RTreeNode *rt) {
   return rt != NULL && rt->red == true;
 }
 
-static rtree_node_t *rot_once(rtree_node_t *root, int dir) {
-  rtree_node_t *ret = root->link[!dir];
+static RTreeNode *rot_once(RTreeNode *root, int dir) {
+  RTreeNode *ret = root->link[!dir];
 
   root->link_sum[!dir] = ret->link_sum[dir];
   root->tot = root->fit + root->link_sum[0] + root->link_sum[1];
@@ -62,13 +62,13 @@ static rtree_node_t *rot_once(rtree_node_t *root, int dir) {
   return ret;
 }
 
-static rtree_node_t *rot_twice(rtree_node_t *root, int dir) {
+static RTreeNode *rot_twice(RTreeNode *root, int dir) {
   root->link[!dir] = rot_once(root->link[!dir], !dir);
   return rot_once(root, dir);
 }
 
-static rtree_node_t *rtree_node_create(void *data, double fitness) {
-  rtree_node_t *node = (rtree_node_t *) malloc(sizeof(rtree_node_t));
+static RTreeNode *rtree_node_create(void *data, double fitness) {
+  RTreeNode *node = (RTreeNode *) malloc(sizeof(RTreeNode));
   node->data = data;
   node->fit = fitness;
   node->tot = fitness;
@@ -82,15 +82,15 @@ static rtree_node_t *rtree_node_create(void *data, double fitness) {
   return node;
 }
 
-static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
+static RTreeNode *rtree_insert_node(RTreeNode *root, void *data,
                                        double fitness) {
   if (root == NULL) {
     return rtree_node_create(data, fitness);
   }
   else {
-    rtree_node_t head = {0};
+    RTreeNode head = {0};
 
-    rtree_node_t *g, *t, *p, *q;
+    RTreeNode *g, *t, *p, *q;
     int last = 2;
     bool inserted = false;
 
@@ -143,8 +143,8 @@ static rtree_node_t *rtree_insert_node(rtree_node_t *root, void *data,
   }
 }
 
-static double rtree_find_fit(rtree_t *rt, double pick) {
-  rtree_node_t *cur = rt->root;
+static double rtree_find_fit(RTree *rt, double pick) {
+  RTreeNode *cur = rt->root;
   while (1) {
     if (cur->link_sum[0] < pick) { // this or right
       pick -= cur->link_sum[0];
@@ -164,24 +164,24 @@ static double rtree_find_fit(rtree_t *rt, double pick) {
 
 // Public functions, available for everyone to use.
 
-rtree_t *rtree_create() {
-  rtree_t *rt = malloc(sizeof(rtree_t));
+RTree *rtree_create() {
+  RTree *rt = malloc(sizeof(RTree));
   rt->root = NULL;
   return rt;
 }
 
-void rtree_destroy(rtree_t *rt) {
+void rtree_destroy(RTree *rt) {
   dfs_destroy(rt->root);
   free(rt);
 }
 
-void rtree_add(rtree_t *rt, void *data_ptr, double fitness) {
+void rtree_add(RTree *rt, void *data_ptr, double fitness) {
   rt->root = rtree_insert_node(rt->root, data_ptr, fitness);
   rt->root->red = false;
 }
 
-void *rtree_rget(rtree_t *rt) {
-  rtree_node_t *cur = rt->root;
+void *rtree_rget(RTree *rt) {
+  RTreeNode *cur = rt->root;
   double pick = ((double) rand()/(double) RAND_MAX) * cur->tot;
   while (1) {
     if (cur->link_sum[0] < pick) { // this or right
@@ -200,10 +200,10 @@ void *rtree_rget(rtree_t *rt) {
   }
 }
 
-void *rtree_rpop(rtree_t *rt) {
+void *rtree_rpop(RTree *rt) {
   if (rt->root != NULL) {
     void *data_ptr = NULL;
-    rtree_node_t *root = rt->root;
+    RTreeNode *root = rt->root;
 
     /* Pick a random element */
     const double pick = ((double) rand()/(double) RAND_MAX) * root->tot;
@@ -211,8 +211,8 @@ void *rtree_rpop(rtree_t *rt) {
     double fit_left = pick;
 
     /* Helpers */
-    rtree_node_t head = {0};
-    rtree_node_t *cur, *parent, *grandparent;
+    RTreeNode head = {0};
+    RTreeNode *cur, *parent, *grandparent;
 
     cur = &head;
     parent = grandparent = NULL;
@@ -258,7 +258,7 @@ void *rtree_rpop(rtree_t *rt) {
 
         /* Bubble up value and fitness from child. */
         if (cur->link[dir] != NULL) {
-          const rtree_node_t *child = cur->link[dir];
+          const RTreeNode *child = cur->link[dir];
 
           cur->tot -= cur->fit;
           cur->fit = child->fit;
@@ -277,7 +277,7 @@ void *rtree_rpop(rtree_t *rt) {
           parent = parent->link[prev_dir] = rot_once(cur, dir);
         }
         else if (!is_red(cur->link[!dir])) {
-          rtree_node_t *cur_sibling = parent->link[!prev_dir];
+          RTreeNode *cur_sibling = parent->link[!prev_dir];
 
           if (cur_sibling != NULL) {
             /* If both sibling's children are black */
@@ -326,7 +326,7 @@ void *rtree_rpop(rtree_t *rt) {
   }
 }
 
-uint32_t rtree_size(rtree_t *rt) {
+uint32_t rtree_size(RTree *rt) {
   if (rt->root == NULL) {
     return 0;
   } else {
@@ -334,7 +334,7 @@ uint32_t rtree_size(rtree_t *rt) {
   }
 }
 
-double rtree_total_fitness(rtree_t *rt) {
+double rtree_total_fitness(RTree *rt) {
   if (rt->root == NULL) {
     return 0;
   } else {
@@ -346,14 +346,14 @@ double rtree_total_fitness(rtree_t *rt) {
 
 #include <stdio.h>
 
-int rb_check(rtree_node_t *root) {
+int rb_check(RTreeNode *root) {
   int h[2];
 
   if (root == NULL) {
     return 1;
   }
   else {
-    rtree_node_t **node = root->link;
+    RTreeNode **node = root->link;
 
     /* multiple red links */
     if (is_red(root)) {
@@ -385,7 +385,7 @@ int rb_check(rtree_node_t *root) {
 #define DELTA 0.001
 #include <math.h>
 
-double total_fit_check(rtree_t *rt) {
+double total_fit_check(RTree *rt) {
   if (rt->root == NULL) {
     return 0.0;
   }
@@ -401,7 +401,7 @@ double total_fit_check(rtree_t *rt) {
   }
 }
 
-double fit_check(rtree_node_t *root) {
+double fit_check(RTreeNode *root) {
   if (root == NULL) {
     return 0;
   }
@@ -427,7 +427,7 @@ double fit_check(rtree_node_t *root) {
   }
 }
 
-static void rtree_node_preorder(rtree_node_t *root, int tab) {
+static void rtree_node_preorder(RTreeNode *root, int tab) {
   printf("%*s", tab, "");
   if (root == NULL) {
     printf("NULL\n");
@@ -441,11 +441,11 @@ static void rtree_node_preorder(rtree_node_t *root, int tab) {
   }
 }
 
-void rtree_preorder(rtree_t *rt) {
+void rtree_preorder(RTree *rt) {
   rtree_node_preorder(rt->root, 0);
 }
 
-static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
+static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
                             const int counter) {
   if (root == NULL)
     return counter;
@@ -479,7 +479,7 @@ static int rtree_to_dot_rec(FILE *const out, rtree_node_t *const root,
   }
 }
 
-void rtree_to_dot(rtree_t *rt, char *loch) {
+void rtree_to_dot(RTree *rt, char *loch) {
   FILE *out = fopen(loch, "w");
   fprintf(out, "digraph g {\n  bgcolor=transparent\n  node [shape=record];\n");
   rtree_to_dot_rec(out, rt->root, 0);

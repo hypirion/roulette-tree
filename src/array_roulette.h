@@ -30,22 +30,22 @@
 typedef struct {
   void *elt_ptr;
   double fit_from, fit_to;
-} aroulette_elt;
+} ARouletteElt;
 
 typedef struct {
-  aroulette_elt *arr;
+  ARouletteElt *arr;
   uint32_t len, cap;
   double tot_fitness;
-} aroulette_t;
+} ARoulette;
 
-aroulette_t *aroulette_create();
-void aroulette_destroy(aroulette_t *ar);
+ARoulette *aroulette_create();
+void aroulette_destroy(ARoulette *ar);
 
-void aroulette_add(aroulette_t *ar, void *elt_ptr, double fitness);
+void aroulette_add(ARoulette *ar, void *elt_ptr, double fitness);
 
-void *aroulette_rget(aroulette_t *ar);
-void *aroulette_rpop(aroulette_t *ar);
+void *aroulette_rget(ARoulette *ar);
+void *aroulette_rpop(ARoulette *ar);
 
-uint32_t aroulette_length(aroulette_t *ar);
-double aroulette_total_fitness(aroulette_t *ar);
+uint32_t aroulette_length(ARoulette *ar);
+double aroulette_total_fitness(ARoulette *ar);
 #endif

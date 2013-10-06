@@ -27,39 +27,39 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct rtree_node_t {
+typedef struct RTreeNode {
   bool red;
   void *data;
   double fit, tot;
   uint32_t len[2];
   double link_sum[2];
-  struct rtree_node_t *link[2];
-} rtree_node_t;
+  struct RTreeNode *link[2];
+} RTreeNode;
 
 typedef struct {
-  rtree_node_t *root;
-} rtree_t;
+  RTreeNode *root;
+} RTree;
 
-rtree_t *rtree_create();
-void rtree_destroy(rtree_t *rt);
+RTree *rtree_create();
+void rtree_destroy(RTree *rt);
 
-void rtree_add(rtree_t *rt, void *elt_ptr, double fitness);
+void rtree_add(RTree *rt, void *elt_ptr, double fitness);
 
-void *rtree_rget(rtree_t *rt);
-void *rtree_rpop(rtree_t *rt);
+void *rtree_rget(RTree *rt);
+void *rtree_rpop(RTree *rt);
 
-uint32_t rtree_size(rtree_t *rt);
-double rtree_total_fitness(rtree_t *rt);
+uint32_t rtree_size(RTree *rt);
+double rtree_total_fitness(RTree *rt);
 
 #ifdef RTREE_DEBUG
 
-int rb_check(rtree_node_t *root);
-double total_fit_check(rtree_t *rt);
-double fit_check(rtree_node_t *root);
+int rb_check(RTreeNode *root);
+double total_fit_check(RTree *rt);
+double fit_check(RTreeNode *root);
 
-void rtree_preorder(rtree_t *rt);
+void rtree_preorder(RTree *rt);
 
-void rtree_to_dot(rtree_t *rt, char *loch);
+void rtree_to_dot(RTree *rt, char *loch);
 
 #endif
 
