@@ -457,7 +457,16 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
         link_names[i] = rtree_to_dot_rec(out, root->link[i], prev_link);
     }
     const int mid = link_names[2-1] + 1;
-    fprintf(out, "  s%.3d [label=\"%ld\"];\n", mid, (long) root->data);
+    // print data node
+    fprintf(out,
+            "s%.3d [shape=none, label=<\n"
+            "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" "
+            "cellpadding=\"6\" align=\"center\">\n"
+            "  <tr>\n"
+            "    <td height=\"36\" width=\"25\">%ld</td>\n"
+            "  </tr>\n"
+            "</table>>];\n",
+            mid, (long) root->data);
     const int this = mid + 1;
     fprintf(out, "  s%.3d [style=filled, fillcolor=%s, "
                  "label=\"{{%s | %d | %d} | %.2f |"
