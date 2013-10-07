@@ -474,7 +474,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
             "cellpadding=\"6\" align=\"center\" bgcolor=\"#%s\">\n"
             "  <tr>\n"
             "    <td height=\"36\" width=\"25\">%d</td>\n"
-            "    <td height=\"36\" width=\"25\">%s</td>\n"
+            "    <td height=\"36\" width=\"25\" port=\"top\">%s</td>\n"
             "    <td height=\"36\" width=\"25\">%d</td>\n"
             "  </tr>\n"
             "  <tr>\n"
@@ -496,7 +496,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
         continue;
       }
       else {
-        fprintf(out, "  s%.3d:%d -> s%.3d;\n", this, i, link_names[i]);
+        fprintf(out, "  s%.3d:%d -> s%.3d:top;\n", this, i, link_names[i]);
         prev_link = link_names[i];
       }
     }
