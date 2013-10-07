@@ -463,7 +463,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
             "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" "
             "cellpadding=\"6\" align=\"center\">\n"
             "  <tr>\n"
-            "    <td height=\"36\" width=\"25\">%ld</td>\n"
+            "    <td height=\"36\" width=\"25\" port=\"0\">%ld</td>\n"
             "  </tr>\n"
             "</table>>];\n",
             mid, (long) root->data);
@@ -485,7 +485,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
         prev_link = link_names[i];
       }
     }
-    fprintf(out, "  s%.3d:m -> s%.3d;\n", this, mid);
+    fprintf(out, "  s%.3d:m -> s%.3d:0;\n", this, mid);
     return this;
   }
 }
