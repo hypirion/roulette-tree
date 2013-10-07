@@ -459,7 +459,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
     const int mid = link_names[2-1] + 1;
     // print data node
     fprintf(out,
-            "s%.3d [shape=none, label=<\n"
+            "s%.3d [label=<\n"
             "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" "
             "cellpadding=\"6\" align=\"center\">\n"
             "  <tr>\n"
@@ -468,11 +468,26 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
             "</table>>];\n",
             mid, (long) root->data);
     const int this = mid + 1;
-    fprintf(out, "  s%.3d [style=filled, fillcolor=\"#%s\", "
-                 "label=\"{{%s | %d | %d} | %.2f |"
-                 "{<0>%.2f |<m>%.2f | <1>%.2f}}\"];\n",
+    fprintf(out,
+            "  s%.3d [label=<\n"
+             "<table border=\"0\" cellborder=\"1\" cellspacing=\"0\" "
+            "cellpadding=\"6\" align=\"center\" bgcolor=\"#%s\">\n"
+            "  <tr>\n"
+            "    <td height=\"36\" width=\"25\">%d</td>\n"
+            "    <td height=\"36\" width=\"25\">%s</td>\n"
+            "    <td height=\"36\" width=\"25\">%d</td>\n"
+            "  </tr>\n"
+            "  <tr>\n"
+            "    <td colspan=\"3\" height=\"36\" width=\"25\">%.2f</td>\n"
+            "  </tr>\n"
+            "  <tr>\n"
+            "    <td height=\"36\" width=\"25\" port=\"0\">%.2f</td>\n"
+            "    <td height=\"36\" width=\"25\" port=\"m\">%.2f</td>\n"
+            "    <td height=\"36\" width=\"25\" port=\"1\">%.2f</td>\n"
+            "  </tr>\n"
+            "</table>>];\n",
             this, root->red ? "FF000077" : "00000077",
-            root->red ? "red" : "black", root->len[0], root->len[1],
+            root->len[0], root->red ? "red" : "black", root->len[1],
             root->tot, root->link_sum[0], root->fit, root->link_sum[1]);
 
     prev_link = counter;
@@ -492,7 +507,7 @@ static int rtree_to_dot_rec(FILE *const out, RTreeNode *const root,
 
 void rtree_to_dot(RTree *rt, char *loch) {
   FILE *out = fopen(loch, "w");
-  fprintf(out, "digraph g {\n  bgcolor=transparent\n  node [shape=record];\n");
+  fprintf(out, "digraph g {\n  bgcolor=transparent\n  node [shape=none];\n");
   rtree_to_dot_rec(out, rt->root, 0);
   fprintf(out, "}\n");
   fclose(out);
