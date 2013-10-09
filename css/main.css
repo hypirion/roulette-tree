@@ -21,3 +21,11 @@ h1, h2, h3, h4 {text-align: left;}
     text-align: justify;
     line-height: 1.5em;
 }
+
+.arc path {
+    stroke: #fff;
+}
+
+form {
+    float: right;
+}
