@@ -36,6 +36,22 @@
         constant factors and average runtimes are more imporant in practice, we
         will also compare the roulette tree empirically against other
         solutions.</p>
+        <h2>The Dynamic Roulette Wheel Problem</h2>
+        <p>Many people already know what a roulette wheel is, and what it is
+        used for: You have a circle, divided into some number of slots. The
+        different slots usually have the same size and thus have same
+        probability of being chosen in a random spin. Having different sizes on
+        different slots is not unheard of, but is less common: The result is
+        that the larger slots have higher probability of being picked, whereas
+        smaller slots have lower probability.</p>
+        <p>In the real world, roulette wheels are
+        (usually) <strong>static</strong>: Slots aren't removed, added or
+        resized. Consequently, static roulette wheels are very easy to
+        simulate.</p>
+        <p>A <strong>dynamic</strong> roulette wheel on the other hand, have the
+        possibility to resize, insert or remove elements on the fly. I'll focus
+        on fast insertion and removal, as resizing seems to be of limited
+        use.</p>
         <form>
           <label><input type="radio" class="pie1form" name="dataset" value="before" checked>Original</label>
           <label><input type="radio" class="pie1form" name="dataset" value="after">Remove a</label>
