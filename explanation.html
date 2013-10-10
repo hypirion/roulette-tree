@@ -50,8 +50,42 @@
         simulate.</p>
         <p>A <strong>dynamic</strong> roulette wheel on the other hand, have the
         possibility to resize, insert or remove elements on the fly. I'll focus
-        on fast insertion and removal, as resizing seems to be of limited
-        use.</p>
+        on fast insertion and removal, as resizing seems to be of limited use as
+        of now.</p>
+        <h3>Relative Probability</h3>
+        <p>So, what does it mean to actually remove or insert a slot? For a
+        roulette wheel, we can imagine this in two different ways:</p>
+        <ol>
+          <li><em>Grey</em> out the removed slot. When spinning the wheel, we
+          spin it until we hit a non-grey slot. For insertion, this is like
+          "ungreying" a slot we've always had on the roulette wheel.</li>
+          <li>Remove the slot, and <em>scale</em> the other slots uniformly up,
+          so that they now fill the whole circle again. For insertion, this is
+          the same as inserting the slow, and scale the other slots uniformly
+          down.</li>
+        </ol>
+        <p>Both of these give the desired result and the same probabilities, so
+        which one we pick in practice would be related to practicalities. It
+        turns out that the second way handles both performance and complexity
+        well, mainly for two reasons:</p>
+        <ul>
+          <li>Imagine that we split the roulette tree up into 100 uniform slots,
+          and remove 98 of the slots. The two slots left would obviously have a
+          50% chance of being chosen. However, in 98% of the times we pick a
+          slot, we pick a greyed out one and we would have to roll again! On
+          average, we would have to roll the wheel 50 times to get one of them,
+          which is inefficient.</li>
+          <li>How would we add in new slots? We could imagine that we have a
+          "buffer" of slots available when making a new roulette wheel. However,
+          what size would the additional slots be in, and how many should there
+          be? In theory, there must be an infinte number to accomodate all
+          different possibilities! <br> In addition, this slot buffer,
+          regardless of its size, would hurt performance for the same reasons
+          the previous point did.</li>
+        </ul>
+        <p>As a result, all dynamic roulette wheel simulations use the second
+        solution: <em>Relatively</em> scale all the slots based upon the total
+        size of the slots.</p>
         <form>
           <label><input type="radio" class="pie1form" name="dataset" value="before" checked>Original</label>
           <label><input type="radio" class="pie1form" name="dataset" value="after">Remove a</label>
