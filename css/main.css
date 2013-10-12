@@ -29,3 +29,15 @@ h1, h2, h3, h4 {text-align: left;}
 form {
     float: right;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+td, th {
+    padding: 5pt;
+}
