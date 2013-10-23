@@ -1,0 +1,6 @@
+SUBDIRS = src \
+          test
+
+EXTRA_DIST = README.md COPYING
+
+ACLOCAL_AMFLAGS = -I m4
