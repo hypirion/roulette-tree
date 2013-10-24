@@ -1,5 +1,5 @@
 SUBDIRS = src \
-          test
+          test-suite
 
 EXTRA_DIST = README.md COPYING
 
