@@ -38,31 +38,6 @@
 int tests_run = 0;
 int tests_failed = 0;
 
-static int test_duplicates() {
-  puts("Testing that duplicates are allowed.");
-  RTree *rt = rtree_create();
-  const int elts = 10;
-  const int nof_insertions = 10;
-  for (uintptr_t elt = 0; elt < elts; elt++) {
-    REPEAT (nof_insertions) {
-      rtree_add(rt, (void *) elt, 1.0);
-    }
-  }
-  int *count = calloc(10, sizeof(int));
-  while (rtree_size(rt) > 0) {
-    count[(uintptr_t) rtree_rpop(rt)]++;
-  }
-  for (uintptr_t elt = 0; elt < elts; elt++) {
-    char *msg = calloc(80, sizeof(char));
-    sprintf(msg, "Expected %d elements for %ld, not %d.", nof_insertions, elt,
-            count[elt]);
-    mu_assert(msg, count[elt] == nof_insertions);
-    free(msg);
-  }
-  free(count);
-  return 0;
-}
-
 static int test_duplicate_probabilities() {
   puts("Testing that duplicates doesn't share probabilities.");
   const uintptr_t a = 42;
@@ -187,7 +162,6 @@ static int test_uniform_frequency() {
 }
 
 static void all_tests() {
-  mu_run_test(test_duplicates);
   mu_run_test(test_duplicate_probabilities);
   mu_run_test(test_consistent_fitness);
   mu_run_test(test_rb_invariants);

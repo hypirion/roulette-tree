@@ -11,3 +11,7 @@ test_SOURCES = main.c
 check_PROGRAMS += test_all_kept
 TESTS += test_all_kept
 test_all_kept_SOURCES = test_all_kept.c
+
+check_PROGRAMS += test_duplicates
+TESTS += test_duplicates
+test_duplicates_SOURCES = test_duplicates.c
