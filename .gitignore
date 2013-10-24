@@ -3,3 +3,10 @@
 /bin/main
 /test/bin/main
 /_site
+Makefile.in
+Makefile
+/autom4te.cache
+/build-aux
+/config.h.in
+/aclocal.m4
+configure
