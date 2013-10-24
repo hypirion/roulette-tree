@@ -1,3 +1,5 @@
-script: make test
+script: autoreconf --install && ./configure && make && make check
 language: c
-compiler: gcc
+compiler:
+  - gcc
+  - clang
