@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2013 Jean Niklas L'orange. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -14,31 +37,6 @@
 
 int tests_run = 0;
 int tests_failed = 0;
-
-static int test_all_kept() {
-  puts("Testing that inserted elements doesn't disappear or duplicate.");
-  for (int count = 0; count < 1000; count++) {
-    RTree *rt = rtree_create();
-    for (uintptr_t i = 0; i < count; i++) {
-      rtree_add(rt, (void *) i, ((double) rand()/(double) RAND_MAX));
-    }
-    char *recvd = calloc(count, sizeof(char));
-    for (int i = 0; i < count; i++) {
-      int pos = (int) ((uintptr_t) rtree_rpop(rt));
-      recvd[pos]++;
-    }
-    for (int i = 0; i < count; i++) {
-      char *err_msg = calloc(80, sizeof(char));
-      sprintf(err_msg, "Expected exactly 1 elt with value %d, but was %d.", i,
-              recvd[i]);
-      mu_assert(err_msg, recvd[i] == 1);
-      free(err_msg);
-    }
-    free(recvd);
-    rtree_destroy(rt);
-  }
-  return 0;
-}
 
 static int test_duplicates() {
   puts("Testing that duplicates are allowed.");
@@ -189,7 +187,6 @@ static int test_uniform_frequency() {
 }
 
 static void all_tests() {
-  mu_run_test(test_all_kept);
   mu_run_test(test_duplicates);
   mu_run_test(test_duplicate_probabilities);
   mu_run_test(test_consistent_fitness);
