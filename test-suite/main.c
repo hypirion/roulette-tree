@@ -38,33 +38,6 @@
 int tests_run = 0;
 int tests_failed = 0;
 
-static int test_duplicate_probabilities() {
-  puts("Testing that duplicates doesn't share probabilities.");
-  const uintptr_t a = 42;
-  const uintptr_t b = 1337;
-  const int size = 10000;
-  int count = 0;
-  REPEAT(size) {
-    RTree *rt = rtree_create();
-    REPEAT(3) {rtree_add(rt, (void *) a, 1.0);}
-    REPEAT(2) {rtree_add(rt, (void *) b, 1.0);}
-
-    // Picking at least one a out of two means picking no b's.
-    // For uniform probability, that is 1 - (2/5 * 1/4) = 0.9
-    REPEAT(2) {
-      if (rtree_rpop(rt) == (void *) a) {
-        count++;
-        break;
-      }
-    }
-    rtree_destroy(rt);
-  }
-  double freq = ((double) count)/size;
-  // printf("Frequency: %f\n", freq);
-  mu_assert("Frequency too improbable", 0.9 - 0.01 < freq && freq < 0.9 + 0.01);
-  return 0;
-}
-
 static int test_consistent_fitness() {
   puts("Testing that the fitness of a randomly mutated rtree is consistent.");
   for (int count = 0; count < 1000; count++) {
@@ -162,7 +135,6 @@ static int test_uniform_frequency() {
 }
 
 static void all_tests() {
-  mu_run_test(test_duplicate_probabilities);
   mu_run_test(test_consistent_fitness);
   mu_run_test(test_rb_invariants);
   mu_run_test(test_nonuniform_frequency);

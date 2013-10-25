@@ -15,3 +15,7 @@ test_all_kept_SOURCES = test_all_kept.c
 check_PROGRAMS += test_duplicates
 TESTS += test_duplicates
 test_duplicates_SOURCES = test_duplicates.c
+
+check_PROGRAMS += test_duplicate_probabilities
+TESTS += test_duplicate_probabilities
+test_duplicate_probabilities_SOURCES = test_duplicate_probabilities.c
