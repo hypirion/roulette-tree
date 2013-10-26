@@ -19,3 +19,7 @@ test_duplicates_SOURCES = test_duplicates.c
 check_PROGRAMS += test_duplicate_probabilities
 TESTS += test_duplicate_probabilities
 test_duplicate_probabilities_SOURCES = test_duplicate_probabilities.c
+
+check_PROGRAMS += test_consistent_fitness
+TESTS += test_consistent_fitness
+test_consistent_fitness_SOURCES = test_consistent_fitness.c
