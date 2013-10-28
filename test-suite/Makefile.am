@@ -27,3 +27,7 @@ test_consistent_fitness_SOURCES = test_consistent_fitness.c
 check_PROGRAMS += test_rb_invariants
 TESTS += test_rb_invariants
 test_rb_invariants_SOURCES = test_rb_invariants.c
+
+check_PROGRAMS += test_nonuniform_frequency
+TESTS += test_nonuniform_frequency
+test_nonuniform_frequency_SOURCES = test_nonuniform_frequency.c
