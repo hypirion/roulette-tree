@@ -13,6 +13,15 @@ fitness value.
 The rtree is designed to do insertions, random picks and random pops in
 O(log n) time, and count and total frequency in O(1) time.
 
+## Project Status
+
+The Roulette Tree is properly implemented, but small details related to
+autotools remains. Additionally, a proper explanation of the insertion and
+removal algorithms remains.
+
+This project is currently inactive, but may be revived in short time to finish
+off remaining issues.
+
 ## Rationale
 
 A roulette tree is an excellent data structure for picking random elements based
