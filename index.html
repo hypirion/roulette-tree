@@ -21,18 +21,13 @@
 
         <h3>Quickstart</h3>
         <p>To build the rtree and see it in action, fetch the code from git and
-        build the thing. Assuming you have <code>git</code>, <code>make</code>
-        and <code>gcc</code>, you just have to do this:</p>
+        build the thing. Assuming you have git, autotools and gcc, you can call
+        these commands:</p>
         <code><pre>git clone https://github.com/hyPiRion/roulette-tree.git rtree
 cd rtree
+autoreconf --install
+./configure
 make</pre></code>
-        <p>To see an explanation on how it works, you can do as follows. This
-        requires graphviz installed (more specifically, <code>dot</code>):</p>
-        <code><pre>bin/main
-cd imgs
-make</pre></code>
-        <p>A sequence of images from test-00 to test-11 should now have been
-        generated. View them in sequence to "comprehend" what's going on.</p>
 
         <h2>The Problem</h2>
         <p>The general problem can be described as follows: You have a
