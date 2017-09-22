@@ -131,19 +131,19 @@ make</pre></code>
           </tr>
         </table>
 
-        <h2>Further Work</h2>
-        <p>Yeah, this sounds obviously more and more like some paper in a
-        scientific journal. Let's not go into specific details, just explain
-        that I'm aware of certain tricks to speed these structures up for
-        certain use cases. We'll have a short look at the different
-        possibilities.</p>
+        <h2>Other Ways to Implement This</h2>
+        <p>Depending on what you need, a full roulette tree may be unnecessary
+        or not exactly what you want. Here are some options:</p>
         <h3>Single-rpop roulette array</h3>
         <p>A single-rpop roulette array is a structure supporting
         \(\mathcal{O}(1)\) insertion times, and \(\mathcal{O}(\log n)\) random
         picks. It will also support a persistent random pop in
         \(\mathcal{O}(\log n)\) time, which will return the chosen individual,
-        along with a roulette array where you can only perform random picks (in
-        \(\mathcal{O}(\log n)\) time).</p>
+        along with a roulette array where you can only perform random picks in
+        \(\mathcal{O}(\log n)\) time. You can do this by making an array-based
+        roulette wheel and keep track of the slot that was popped. By excluding
+        it during the random number generation, you will still have the same
+        performance as an array-based variant, with a single pop available.</p>
         <h3>Fenwick-based roulette array</h3>
         <p>When you already know the size of the collection, the individuals
         and their fitness, you can speed up all the actions available. By
